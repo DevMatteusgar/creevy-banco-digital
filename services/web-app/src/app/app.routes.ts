@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
 import {RegisterPage} from './pages/register-page/register-page';
 import {LoginPage} from './pages/login-page/login-page';
+import {DashboardPage} from './pages/dashboard-page/dashboard-page';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'register', pathMatch: 'full' },
   {path: 'register', component: RegisterPage},
-  {path: 'login', component: LoginPage}
+  {path: 'login', component: LoginPage},
+  {path: 'home', component: DashboardPage}
 ];
