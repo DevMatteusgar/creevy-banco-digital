@@ -1,1 +1,29 @@
 <app-navbar-layout></app-navbar-layout>
+<div class="dashboard-container">
+  <div class="button-group">
+    <button
+      class="tab-button"
+      (click)="setActiveTab('my-balance')">
+          <span [class.active]="activeTab === 'my-balance'">
+            Meu patrimônio
+          </span>
+    </button>
+
+    <button
+      class="tab-button"
+      (click)="setActiveTab('my-transfers')">
+          <span [class.active]="activeTab === 'my-transfers'">
+            Minhas transferências
+          </span>
+    </button>
+  </div>
+
+  <div class="content">
+    <p *ngIf="activeTab === 'my-balance'">
+      Conteúdo da Visão Geral
+    </p>
+    <p *ngIf="activeTab === 'my-transfers'">
+      Conteúdo dos Relatórios
+    </p>
+  </div>
+</div>

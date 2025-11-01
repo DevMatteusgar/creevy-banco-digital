@@ -1,0 +1,53 @@
+.dashboard-container {
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #333;
+
+}
+
+.button-group {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  margin-left: 13rem;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-size: 1.75rem;
+  font-family: 'Poppins', 'Quicksand', 'Nunito', 'Rounded Mplus 1c', sans-serif;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tab-button:hover {
+  color: #333;
+}
+
+.tab-button span {
+  display: inline-block;
+  padding-bottom: 0.25rem;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button span.active {
+  color: #333;
+  font-weight: 700;
+  border-bottom-color: #ffd700;
+}
+
+.content {
+  margin-left: 13rem;
+  padding: 1rem 0;
+  font-size: 1rem;
+  color: #555;
+}
