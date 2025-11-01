@@ -1,0 +1,107 @@
+<div class="form-container">
+  <div class="header-container">
+    <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    <h2>Creevy Digital</h2>
+  </div>
+
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+    <!-- Nome -->
+    <div class="form-group">
+      <label for="name">Nome:</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        [class.invalid]="name?.invalid && name?.touched"
+      />
+      <div class="error" *ngIf="name?.invalid && name?.touched">
+        <small *ngIf="name?.errors?.['required']">Nome é obrigatório</small>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        [class.invalid]="email?.invalid && email?.touched"
+      />
+      <div class="error" *ngIf="email?.invalid && email?.touched">
+        <small *ngIf="email?.errors?.['required']">Email é obrigatório</small>
+        <small *ngIf="email?.errors?.['email']">Email inválido</small>
+      </div>
+    </div>
+
+    <!-- Senha -->
+    <div class="form-group">
+      <label for="password">Senha (4 dígitos numéricos):</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        maxlength="4"
+        [class.invalid]="password?.invalid && password?.touched"
+      />
+      <div class="error" *ngIf="password?.invalid && password?.touched">
+        <small *ngIf="password?.errors?.['required']">Senha é obrigatória</small>
+        <small *ngIf="password?.errors?.['nonNumeric']">Senha deve conter apenas números</small>
+        <small *ngIf="password?.errors?.['minLength']">Senha deve ter no mínimo 4 dígitos</small>
+        <small *ngIf="password?.errors?.['maxLength']">Senha deve ter no máximo 4 dígitos</small>
+      </div>
+    </div>
+
+    <!-- CPF -->
+    <div class="form-group">
+      <label for="cpf">CPF:</label>
+      <input
+        id="cpf"
+        type="text"
+        formControlName="cpf"
+        placeholder="000.000.000-00"
+        [class.invalid]="cpf?.invalid && cpf?.touched"
+      />
+      <div class="error" *ngIf="cpf?.invalid && cpf?.touched">
+        <small *ngIf="cpf?.errors?.['required']">CPF é obrigatório</small>
+        <small *ngIf="cpf?.errors?.['invalidCpf']">CPF inválido</small>
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        [disabled]="registrationForm.invalid"
+        class="btn-submit"
+      >
+        Cadastrar
+      </button>
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="btn-reset"
+      >
+        Limpar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Link para Login -->
+  <div class="login-link">
+    <p>Já tem conta? <a routerLink="/login">Clique aqui</a></p>
+  </div>
+
+  <!-- Resultado -->
+  <div class="result" *ngIf="submitted">
+    <h3>Dados Submetidos:</h3>
+    <pre>{{ formData | json }}</pre>
+  </div>
+</div>

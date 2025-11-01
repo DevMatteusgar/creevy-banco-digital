@@ -1,0 +1,156 @@
+.form-container {
+  width: 395px;
+  height: 566px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+h2 {
+  font-family: 'Nunito', 'Quicksand', 'Poppins', 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #333;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.header-icon {
+  color: #4CAF50;
+  flex-shrink: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+input.invalid {
+  border-color: #f44336;
+}
+
+.error {
+  margin-top: 5px;
+}
+
+.error small {
+  color: #f44336;
+  font-size: 12px;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-submit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.btn-submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-reset {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.btn-reset:hover {
+  background-color: #e0e0e0;
+}
+
+.result {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 4px solid #4CAF50;
+}
+
+.result h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+pre {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.login-link p {
+  margin: 0;
+  color: #666;
+  font-size: 18px;
+}
+
+.login-link a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.login-link a:hover {
+  color: #45a049;
+  text-decoration: underline;
+}
