@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="card">
+    <div class="header">
+      <h1>Registro de Transações</h1>
+      <p>Últimas 5 transações</p>
+    </div>
+
+    <div class="content">
+      <table>
+        <thead>
+        <tr>
+          <th>Data</th>
+          <th>Destinatário</th>
+          <th>Conta</th>
+          <th class="text-right">Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transacao of transacoesLimitadas">
+          <td>{{ formatarData(transacao.data) }}</td>
+          <td>{{ transacao.destinatario }}</td>
+          <td class="conta">{{ transacao.conta }}</td>
+          <td class="valor">{{ formatarValor(transacao.valor) }}</td>
+        </tr>
+        <tr *ngIf="transfers.length === 0">
+          <td colspan="4" class="empty">
+            Nenhuma transação disponível
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <p>
+          Total de transações:
+          <strong>{{ transfers.length }}</strong>
+        </p>
+        <p class="total">
+          <span>Valor total: </span>
+          <strong>{{ formatarValor(valorTotal) }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
