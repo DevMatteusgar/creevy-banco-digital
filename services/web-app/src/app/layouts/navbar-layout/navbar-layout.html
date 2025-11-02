@@ -6,7 +6,9 @@
       <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
       <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
     </svg>
-    <span class="company-name">Creevy Digital</span>
+    <span class="company-name" >
+      <a routerLink="/home">Creevy Digital</a>
+    </span>
   </div>
 
   <div class="navbar-center">
@@ -16,7 +18,7 @@
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
-        <span>Transferências</span>
+        <span>Transferir</span>
         <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -84,7 +86,7 @@
         Ajuda
       </a>
       <hr class="dropdown-divider">
-      <a href="#" class="dropdown-item danger" (click)="handleMenuClick($event, 'sair')">
+      <a href="#" class="dropdown-item danger" (click)="handleMenuClick($event, 'sair')" routerLink="/login">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>

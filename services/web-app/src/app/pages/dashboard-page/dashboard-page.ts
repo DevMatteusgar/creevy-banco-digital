@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import {NavbarLayout} from '../../layouts/navbar-layout/navbar-layout';
 import {CommonModule} from '@angular/common';
+import {BalanceDashboard} from '../../dashboards/balance-dashboard/balance-dashboard';
 
 @Component({
   selector: 'app-dashboard-page',
+  standalone: true,
   imports: [
     NavbarLayout,
-    CommonModule
+    CommonModule,
+    BalanceDashboard,
 
   ],
   templateUrl: './dashboard-page.html',

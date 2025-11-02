@@ -5,7 +5,7 @@
       class="tab-button"
       (click)="setActiveTab('my-balance')">
           <span [class.active]="activeTab === 'my-balance'">
-            Meu patrimônio
+            Saldo
           </span>
     </button>
 
@@ -13,14 +13,14 @@
       class="tab-button"
       (click)="setActiveTab('my-transfers')">
           <span [class.active]="activeTab === 'my-transfers'">
-            Minhas transferências
+            Transferências
           </span>
     </button>
   </div>
 
   <div class="content">
     <p *ngIf="activeTab === 'my-balance'">
-      Conteúdo da Visão Geral
+      <app-balance-dashboard></app-balance-dashboard>
     </p>
     <p *ngIf="activeTab === 'my-transfers'">
       Conteúdo dos Relatórios

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-navbar-layout',
+  standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink
   ],
   templateUrl: './navbar-layout.html',
   styleUrl: './navbar-layout.css',
