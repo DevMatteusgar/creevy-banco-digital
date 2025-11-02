@@ -32,6 +32,11 @@
   position: relative;
 }
 
+.invest-menu {
+  position: relative;
+  margin-left: 30px;
+}
+
 .transfers-button {
   display: flex;
   align-items: center;

@@ -16,17 +16,28 @@ export class NavbarLayout {
 
   isMenuOpen = false;
   isTransfersOpen = false;
+  isInvestOpen = false;
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
     if (this.isMenuOpen) {
       this.isTransfersOpen = false;
+      this.isInvestOpen = false;
     }
   }
 
   toggleTransfers() {
     this.isTransfersOpen = !this.isTransfersOpen;
     if (this.isTransfersOpen) {
+      this.isMenuOpen = false;
+      this.isInvestOpen = false;
+    }
+  }
+
+  toggleInvest() {
+    this.isInvestOpen = !this.isInvestOpen;
+    if (this.isInvestOpen) {
+      this.isTransfersOpen = false;
       this.isMenuOpen = false;
     }
   }
@@ -39,9 +50,14 @@ export class NavbarLayout {
     this.isTransfersOpen = false;
   }
 
+  closeInvest() {
+    this.isInvestOpen = false;
+  }
+
   closeAllMenus() {
     this.isMenuOpen = false;
     this.isTransfersOpen = false;
+    //this.isInvestOpen = false;
   }
 
   handleMenuClick(event: Event, action: string) {
@@ -84,5 +100,25 @@ export class NavbarLayout {
     }
 
     this.closeTransfers();
+  }
+
+  handleInvestClick(event: Event, action: string) {
+    event.preventDefault();
+    console.log(`Investimentos selecionado: ${action}`);
+
+    // Aqui você pode implementar a lógica para cada tipo de transferência
+    switch(action) {
+      case 'carteira':
+        console.log('Abrindo tela de carteira...');
+        break;
+      case 'bolsa de valores':
+        console.log('Abrindo tela de bolsa de valores...');
+        break;
+      case 'gráficos':
+        console.log('Abrindo gráficos...');
+        break;
+    }
+
+    this.closeInvest();
   }
 }
