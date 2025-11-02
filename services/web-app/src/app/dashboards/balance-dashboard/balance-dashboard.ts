@@ -15,10 +15,12 @@ export class BalanceDashboard {
   porcentagemInvestimentos: number = 0;
   dataAtualizacao: string = '-'; //Depois pode ser salvo em localStorage/sessionStorage
 
+  // Formatar moeda -> atenção ao type do valor vindo da API
   formatarMoeda(valor: number): string {
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   }
 
+  // Atualizar os dados da dashboard
   atualizar(): void {
     // Atualiza a data com a data/hora atual
     const agora = new Date();
@@ -33,4 +35,7 @@ export class BalanceDashboard {
     // Aqui você pode adicionar a lógica para buscar novos dados
     console.log('Dashboard atualizado em:', this.dataAtualizacao);
   }
+
+  // Exportar em pdf ou xls
+  exportar(): void{}
 }
