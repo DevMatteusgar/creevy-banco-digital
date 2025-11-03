@@ -12,7 +12,7 @@ export class BalanceDashboard {
   saldoTotal: number = 0;
   poupanca: number = 0;
   investimentos: number = 0;
-  porcentagemInvestimentos: number = 0;
+  porcentagemInvestimentos: number = 0; //Em relação ao o que? (rentabilidade da carteira)
   dataAtualizacao: string = '-'; //Depois pode ser salvo em localStorage/sessionStorage
 
   // Formatar moeda -> atenção ao type do valor vindo da API
