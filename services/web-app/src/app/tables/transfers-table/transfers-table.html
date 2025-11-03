@@ -1,0 +1,111 @@
+<div class="container">
+  <div class="card">
+    <div class="header">
+      <h1>Extrato bancário</h1>
+      <p>Visualize transações financeiras</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+      <!-- Destinatário no topo -->
+      <div class="filtro-destinatario">
+        <label for="destinatario">Destinatário:</label>
+        <input
+          type="text"
+          id="destinatario"
+          placeholder="Buscar por nome..."
+          [(ngModel)]="filtros.destinatario"
+          (ngModelChange)="aplicarFiltros()"
+        />
+      </div>
+
+      <!-- Filtros horizontais embaixo -->
+      <div class="filtros-horizontal">
+        <div class="filtro-grupo">
+          <label for="dataMin">Data Mínima:</label>
+          <input
+            type="date"
+            id="dataMin"
+            [(ngModel)]="filtros.dataMin"
+            (ngModelChange)="aplicarFiltros()"
+          />
+        </div>
+
+        <div class="filtro-grupo">
+          <label for="dataMax">Data Máxima:</label>
+          <input
+            type="date"
+            id="dataMax"
+            [(ngModel)]="filtros.dataMax"
+            (ngModelChange)="aplicarFiltros()"
+          />
+        </div>
+
+        <div class="filtro-grupo">
+          <label for="valorMin">Valor Mínimo:</label>
+          <input
+            type="number"
+            id="valorMin"
+            placeholder="R$ 0,00"
+            [(ngModel)]="filtros.valorMin"
+            (ngModelChange)="aplicarFiltros()"
+            step="0.01"
+          />
+        </div>
+
+        <div class="filtro-grupo">
+          <label for="valorMax">Valor Máximo:</label>
+          <input
+            type="number"
+            id="valorMax"
+            placeholder="R$ 0,00"
+            [(ngModel)]="filtros.valorMax"
+            (ngModelChange)="aplicarFiltros()"
+            step="0.01"
+          />
+        </div>
+
+        <button class="btn-limpar" (click)="limparFiltros()">
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <table>
+        <thead>
+        <tr>
+          <th>Data</th>
+          <th>Destinatário</th>
+          <th>Conta</th>
+          <th class="text-right">Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transacao of transacoesFiltradas">
+          <td>{{ formatarData(transacao.data) }}</td>
+          <td>{{ transacao.destinatario }}</td>
+          <td class="conta">{{ transacao.conta }}</td>
+          <td class="valor">{{ formatarValor(transacao.valor) }}</td>
+        </tr>
+        <tr *ngIf="transacoesFiltradas.length === 0">
+          <td colspan="4" class="empty">
+            Nenhuma transação disponível
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <p>
+          Total de transações:
+          <strong>{{ transacoesFiltradas.length }}</strong>
+        </p>
+        <p class="total">
+          <span>Valor total: </span>
+          <strong>{{ formatarValor(valorTotal) }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
