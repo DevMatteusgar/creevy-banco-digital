@@ -1,25 +1,24 @@
 package app.back_end.auth.dto.response;
 
+import java.time.LocalDateTime;
+
 public class RegisterDtoResponse {
 
     private Long id;
     private String name;
     private String cpf;
     private String email;
-    private String password;
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     public RegisterDtoResponse(Long id,
                                String name,
                                String cpf,
                                String email,
-                               String password,
-                               String createdAt) {
+                               LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.email = email;
-        this.password = password;
         this.createdAt = createdAt;
     }
 
@@ -35,10 +34,7 @@ public class RegisterDtoResponse {
     public String getCpf() {
         return cpf;
     }
-    public String getPassword() {
-        return password;
-    }
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }
