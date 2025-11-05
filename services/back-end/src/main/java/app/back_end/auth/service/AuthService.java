@@ -8,7 +8,7 @@ import app.back_end.auth.exceptions.CpfAlreadyExistsException;
 import app.back_end.auth.exceptions.EmailAlreadyExistsException;
 import app.back_end.auth.exceptions.PasswordNotMatchException;
 import app.back_end.auth.exceptions.UserNotFoundException;
-import app.back_end.auth.jwt.JwtUtil;
+import app.back_end.auth.security.JwtUtil;
 import app.back_end.auth.model.UserModel;
 import app.back_end.auth.repository.UserRepository;
 import app.back_end.user.service.UserService;
