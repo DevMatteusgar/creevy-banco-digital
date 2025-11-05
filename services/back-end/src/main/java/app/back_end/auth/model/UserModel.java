@@ -19,20 +19,26 @@ public class UserModel {
     private String password;
 
     @Column(unique = true)
-    String email;
+    private String email;
 
     @Column(unique = true)
-    String cpf;
-
-    //Referencias transações por usuário (1 para muitos)
+    private String cpf;
 
     //Data de criação
     @Column(name = "creation_date", updatable = false)
     private LocalDateTime creationDate;
-    //Callback para setar a data de criação automaticamente
+
+    //Balance do usuario = 0
+    @Column(name = "user_balance")
+    private Double userBalance;
+
+    //Referencias transações por usuário (1 para muitos)
+
+    //Pre persist
     @PrePersist
     protected void onCreate() {
         this.creationDate = LocalDateTime.now();
+        this.userBalance = 0.00;
     }
 
     //Getters and Setters
@@ -65,5 +71,8 @@ public class UserModel {
     }
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+    public Double getUserBalance() {
+        return userBalance;
     }
 }

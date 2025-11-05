@@ -1,4 +1,4 @@
-package app.back_end.auth.service;
+package app.back_end.user.service;
 
 import app.back_end.auth.dto.response.RegisterDtoResponse;
 import app.back_end.auth.model.UserModel;

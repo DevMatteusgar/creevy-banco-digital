@@ -11,6 +11,7 @@ import app.back_end.auth.exceptions.UserNotFoundException;
 import app.back_end.auth.jwt.JwtUtil;
 import app.back_end.auth.model.UserModel;
 import app.back_end.auth.repository.UserRepository;
+import app.back_end.user.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
