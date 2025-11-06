@@ -29,8 +29,14 @@ public class UserModel {
     private LocalDateTime creationDate;
 
     //Balance do usuario = 0
-    @Column(name = "user_balance")
-    private Double userBalance;
+    @Column(name = "total_balance")
+    private Double totalBalance = 0.0;
+
+    @Column(name = "savings_balance")
+    private Double savingsBalance = 0.0;
+
+    @Column(name = "investments_balance")
+    private Double investmentsBalance = 0.0;
 
     //Referencias transações por usuário (1 para muitos)
 
@@ -38,7 +44,9 @@ public class UserModel {
     @PrePersist
     protected void onCreate() {
         this.creationDate = LocalDateTime.now();
-        this.userBalance = 0.00;
+        if (savingsBalance == null) savingsBalance = 0.0;
+        if (investmentsBalance == null) investmentsBalance = 0.0;
+        totalBalance = savingsBalance + investmentsBalance;
     }
 
     //Getters and Setters
@@ -72,7 +80,19 @@ public class UserModel {
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
-    public Double getUserBalance() {
-        return userBalance;
+    public Double getTotalBalance() {
+        return totalBalance;
+    }
+    public Double getSavingsBalance() {
+        return savingsBalance;
+    }
+    public Double getInvestmentsBalance() {
+        return investmentsBalance;
+    }
+    public void setSavingsBalance(Double savingsBalance) {
+        this.savingsBalance = savingsBalance;
+    }
+    public void setInvestmentsBalance(Double investmentsBalance) {
+        this.investmentsBalance = investmentsBalance;
     }
 }

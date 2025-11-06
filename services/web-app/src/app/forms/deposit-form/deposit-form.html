@@ -1,1 +1,66 @@
-<p>deposit-form works!</p>
+<div class="deposito-container">
+  <h1>Depósito</h1>
+
+  <div class="loading" *ngIf="carregando">
+    Carregando informações da conta...
+  </div>
+
+  <div class="erro" *ngIf="erro">
+    {{ erro }}
+  </div>
+
+  <form *ngIf="!carregando && !erro" (ngSubmit)="realizarDeposito()" #depositoForm="ngForm">
+    <div class="form-group">
+      <label for="donoConta">Dono da Conta:</label>
+      <input
+        type="text"
+        id="donoConta"
+        name="donoConta"
+        [(ngModel)]="contaInfo.donoConta"
+        readonly
+        class="readonly-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="numeroConta">Número da Conta:</label>
+      <input
+        type="text"
+        id="numeroConta"
+        name="numeroConta"
+        [(ngModel)]="contaInfo.numeroConta"
+        readonly
+        class="readonly-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="quantia">Quantia (R$):</label>
+      <input
+        type="text"
+        id="quantia"
+        name="quantia"
+        [(ngModel)]="quantia"
+        (input)="formatarMoeda($event)"
+        required
+        placeholder="0,00"
+        #quantiaInput="ngModel"
+      >
+      <div class="erro-validacao" *ngIf="quantia && !isFormularioValido()">
+        Por favor, informe uma quantia válida.
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn-depositar"
+      [disabled]="!isFormularioValido() || processando"
+    >
+      {{ processando ? 'Processando...' : 'Depositar' }}
+    </button>
+
+    <div class="sucesso" *ngIf="sucesso">
+      Depósito realizado com sucesso!
+    </div>
+  </form>
+</div>

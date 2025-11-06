@@ -1,0 +1,33 @@
+package app.back_end.user.controller;
+
+import app.back_end.user.dto.response.AccountInfoDtoResponse;
+import app.back_end.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("accountInfo/{id}")
+    public ResponseEntity<AccountInfoDtoResponse> getAccountById(@PathVariable Long id) {
+        AccountInfoDtoResponse response = userService.accountInfo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //Adaptar requestHeader e interceptor no front-end
+    @GetMapping("myInfo")
+    public ResponseEntity<AccountInfoDtoResponse> myInfo(
+            HttpServletRequest request
+    ) {
+        String email = (String) request.getAttribute("userId");
+        AccountInfoDtoResponse response = userService.MyInfo(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+}

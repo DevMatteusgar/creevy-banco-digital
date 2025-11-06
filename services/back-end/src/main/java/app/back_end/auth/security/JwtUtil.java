@@ -15,10 +15,10 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    // Gera token JWT com o username
-    public String generateToken(String username){
+    // Gera token JWT com o email
+    public String generateToken(String email){
         return Jwts.builder()
-                .setSubject(username) // Define o "sub" do JWT como o username
+                .setSubject(email) // Define o "sub" do JWT como o email
                 .setIssuedAt(new Date()) // Data de emissão
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // Expira em 1 hora
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8))) // Assinatura HMAC
