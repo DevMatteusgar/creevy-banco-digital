@@ -1,46 +1,39 @@
 package app.back_end.balance.dto.response;
 
-import java.time.LocalDateTime;
-
 public class TransferDtoResponse {
 
-    private Long accountId;
-    private String accountName;
-    private String accountCpf;
-    private String option;
+    private Long userId;
+    private String operationType; // TransferSend ou TransferReceive
     private Double value;
-    private LocalDateTime createdAt;
+    private Double balanceAfterOperation;
+    private String message;
 
-    public TransferDtoResponse(Long accountId, String accountName, String accountCpf, String option, Double value) {
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.accountCpf = accountCpf;
-        this.option = option;
+    public TransferDtoResponse(Long userId, String operationType, Double value,
+                              Double balanceAfterOperation, String message) {
+        this.userId = userId;
+        this.operationType = operationType;
         this.value = value;
-        this.createdAt = LocalDateTime.now();
+        this.balanceAfterOperation = balanceAfterOperation;
+        this.message = message;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getMessage() {
+        return message;
+    }
+
+    public Double getBalanceAfterOperation() {
+        return balanceAfterOperation;
     }
 
     public Double getValue() {
         return value;
     }
 
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public String getAccountCpf() {
-        return accountCpf;
-    }
-
-    public String getOption() {
-        return option;
+    public String getOperationType() {
+        return operationType;
     }
 }

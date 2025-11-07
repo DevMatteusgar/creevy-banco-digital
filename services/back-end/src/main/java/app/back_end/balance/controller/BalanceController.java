@@ -1,35 +1,49 @@
 package app.back_end.balance.controller;
 
 import app.back_end.balance.dto.request.DepositDtoRequest;
+import app.back_end.balance.dto.request.TransferDtoRequest;
+import app.back_end.balance.dto.response.DepositDtoResponse;
 import app.back_end.balance.dto.response.TransferDtoResponse;
-import app.back_end.balance.service.BalanceService;
+import app.back_end.balance.model.TransferModel;
+import app.back_end.balance.service.TransferService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/balance")
 public class BalanceController {
 
     @Autowired
-    private BalanceService balanceService;
+    private TransferService transferService;
 
     @PostMapping("deposit")
-    public ResponseEntity<TransferDtoResponse> deposit(
-            HttpServletRequest request,
+    public ResponseEntity<DepositDtoResponse> deposit(
+            HttpServletRequest request, //Vem pelo header possibilitando saber o usuário ativo
             @RequestBody DepositDtoRequest depositForm
             ){
         String email = (String) request.getAttribute("userId");
-        TransferDtoResponse response = balanceService.deposit(email, depositForm.getDepositValue());
+        DepositDtoResponse response = transferService.deposit(email, depositForm.getDepositValue());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("transfer")
     public ResponseEntity<TransferDtoResponse> transfer(
-            @RequestBody TransferDtoRequest transferForm
+            @RequestBody TransferDtoRequest transferForm,
+            HttpServletRequest request
     ){
+        String email = (String) request.getAttribute("userId");
+        TransferDtoResponse response = transferService.transfer(transferForm.getAccountId(), transferForm.getTransferValue(), email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
+    @GetMapping("listAllTransfers")
+    public ResponseEntity<List<TransferModel>> listAllTransactions() {
+        List<TransferModel> response = transferService.listAllTransactions();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

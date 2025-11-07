@@ -1,5 +1,6 @@
 package app.back_end.user.controller;
 
+import app.back_end.auth.model.UserModel;
 import app.back_end.user.dto.response.AccountInfoDtoResponse;
 import app.back_end.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -24,10 +27,16 @@ public class UserController {
     //Adaptar requestHeader e interceptor no front-end
     @GetMapping("myInfo")
     public ResponseEntity<AccountInfoDtoResponse> myInfo(
-            HttpServletRequest request
+            HttpServletRequest request //Vem pelo header possibilitando saber o usuário ativo
     ) {
         String email = (String) request.getAttribute("userId");
         AccountInfoDtoResponse response = userService.MyInfo(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("listAllUsers")
+    public ResponseEntity<List<UserModel>> listAllUsers() {
+        List<UserModel> response = userService.listAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -1,8 +1,12 @@
 package app.back_end.auth.model;
 
+import app.back_end.balance.model.TransferModel;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -39,6 +43,9 @@ public class UserModel {
     private Double investmentsBalance = 0.0;
 
     //Referencias transações por usuário (1 para muitos)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Indica o lado "gerenciador" da relação
+    private List<TransferModel> transactions = new ArrayList<>();
 
     //Pre persist
     @PrePersist
@@ -94,5 +101,11 @@ public class UserModel {
     }
     public void setInvestmentsBalance(Double investmentsBalance) {
         this.investmentsBalance = investmentsBalance;
+    }
+    public List<TransferModel> getTransactions() {
+        return transactions;
+    }
+    public void setTransactions(List<TransferModel> transactions) {
+        this.transactions = transactions;
     }
 }
