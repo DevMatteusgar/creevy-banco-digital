@@ -1,4 +1,4 @@
-package app.back_end.balance.model;
+package app.back_end.transfer.model;
 
 import app.back_end.auth.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;

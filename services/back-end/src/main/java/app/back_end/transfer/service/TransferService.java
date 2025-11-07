@@ -1,12 +1,12 @@
-package app.back_end.balance.service;
+package app.back_end.transfer.service;
 
 import app.back_end.auth.exceptions.UserNotFoundException;
 import app.back_end.auth.model.UserModel;
 import app.back_end.auth.repository.UserRepository;
-import app.back_end.balance.dto.response.DepositDtoResponse;
-import app.back_end.balance.dto.response.TransferDtoResponse;
-import app.back_end.balance.model.TransferModel;
-import app.back_end.balance.repository.TransferRepository;
+import app.back_end.transfer.dto.response.DepositDtoResponse;
+import app.back_end.transfer.dto.response.TransferDtoResponse;
+import app.back_end.transfer.model.TransferModel;
+import app.back_end.transfer.repository.TransferRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

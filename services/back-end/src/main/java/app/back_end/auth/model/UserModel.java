@@ -1,6 +1,6 @@
 package app.back_end.auth.model;
 
-import app.back_end.balance.model.TransferModel;
+import app.back_end.transfer.model.TransferModel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 

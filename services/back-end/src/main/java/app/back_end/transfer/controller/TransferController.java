@@ -1,11 +1,11 @@
-package app.back_end.balance.controller;
+package app.back_end.transfer.controller;
 
-import app.back_end.balance.dto.request.DepositDtoRequest;
-import app.back_end.balance.dto.request.TransferDtoRequest;
-import app.back_end.balance.dto.response.DepositDtoResponse;
-import app.back_end.balance.dto.response.TransferDtoResponse;
-import app.back_end.balance.model.TransferModel;
-import app.back_end.balance.service.TransferService;
+import app.back_end.transfer.dto.request.DepositDtoRequest;
+import app.back_end.transfer.dto.request.TransferDtoRequest;
+import app.back_end.transfer.dto.response.DepositDtoResponse;
+import app.back_end.transfer.dto.response.TransferDtoResponse;
+import app.back_end.transfer.model.TransferModel;
+import app.back_end.transfer.service.TransferService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/balance")
-public class BalanceController {
+public class TransferController {
 
     @Autowired
     private TransferService transferService;

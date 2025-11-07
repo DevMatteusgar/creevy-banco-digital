@@ -1,4 +1,4 @@
-package app.back_end.balance.dto.request;
+package app.back_end.transfer.dto.request;
 
 public class DepositDtoRequest {
 

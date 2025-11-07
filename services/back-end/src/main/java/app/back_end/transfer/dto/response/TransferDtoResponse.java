@@ -1,4 +1,4 @@
-package app.back_end.balance.dto.response;
+package app.back_end.transfer.dto.response;
 
 public class TransferDtoResponse {
 
