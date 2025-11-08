@@ -1,0 +1,28 @@
+spring.application.name=back-end
+server.port=8080
+
+# chave secreta jwt
+jwt.secret=abcdefghijklmnopqrskuvxyzwaaaabbbbbccccddddeeeffgdhjajsdjha
+
+# URL de conexão (modo em arquivo)
+spring.datasource.url=jdbc:h2:file:./data/estoque_db
+
+# Usuário e senha do banco
+spring.datasource.username=sa
+spring.datasource.password=
+
+# Driver JDBC do H2
+spring.datasource.driver-class-name=org.h2.Driver
+
+# Criação automática do schema (útil em testes)
+spring.jpa.hibernate.ddl-auto=update
+
+# Mostrar SQL no console
+spring.jpa.show-sql=true
+
+# Dialeto do Hibernate
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+
+# Habilitar console web do H2 (para acessar via navegador)
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console

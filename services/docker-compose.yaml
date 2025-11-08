@@ -1,0 +1,54 @@
+version: '3.8'
+
+networks:
+  app-net:
+    driver: bridge
+
+services:
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: app-db
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+    restart: always
+
+  # Back-end
+  back-end:
+    build: ./back-end
+    container_name: back-end
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/app_db
+      DATABASE_USER: app_user
+      DATABASE_PASSWORD: app_pass
+      JWT_SECRET: minhachavesupersecretaasuperseguraa1234567890abcdefghijklmn
+    depends_on:
+      - postgres
+    networks:
+      - app-net
+    restart: always
+
+  # Aplicação Web Angular
+  web-app:
+    build: ./web-app
+    container_name: web-app
+    ports:
+      - "4200:80"
+    depends_on:
+      - back-end
+    networks:
+      - app-net
+    restart: always
+
+volumes:
+  postgres_data:

@@ -24,7 +24,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //Adaptar requestHeader e interceptor no front-end
     @GetMapping("myInfo")
     public ResponseEntity<AccountInfoDtoResponse> myInfo(
             HttpServletRequest request //Vem pelo header possibilitando saber o usuário ativo
