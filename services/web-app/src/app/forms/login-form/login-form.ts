@@ -65,8 +65,8 @@ export class LoginForm implements OnInit {
         next: (response) => {
           this.submitted = true;
           console.log('Login realizado com sucesso');
-          console.log('Token JWT:', response.token);
-          this.router.navigate([this.returnUrl]);
+          //console.log('Token JWT:', response.token);
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           this.loading = false;

@@ -7,8 +7,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
-  console.log('[Interceptor] Token:', token ? 'Presente' : 'Ausente');
-  console.log('[Interceptor] URL:', req.url);
+  //console.log('[Interceptor] Token:', token ? 'Presente' : 'Ausente');
+  //console.log('[Interceptor] URL:', req.url);
 
   let authReq = req;
   if (token) {
@@ -17,14 +17,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         Authorization: `Bearer ${token}`
       }
     });
-    console.log('[Interceptor] Header Authorization adicionado');
+    //console.log('[Interceptor] Header Authorization adicionado');
   }
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      console.error('[Interceptor] Erro na requisição:', error);
+      //console.error('[Interceptor] Erro na requisição:', error);
       if (error.status === 401) {
-        console.log('[Interceptor] 401 detectado, fazendo logout');
+        //console.log('[Interceptor] 401 detectado, fazendo logout');
         authService.logout();
       }
       return throwError(() => error);
