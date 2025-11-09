@@ -5,6 +5,8 @@ import {DepositDtoRequest} from '../interfaces/DepositDtoRequest';
 import {DepositDtoResponse} from '../interfaces/DepositDtoResponse';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {TransferDtoRequest} from '../interfaces/TransferDtoRequest';
+import {TransferDtoResponse} from '../interfaces/TransferDtoResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +23,7 @@ export class TransfersService {
     return this.http.get<AccountInfoDtoResponse>(`${this.userApiUrl}/myInfo`);
   }
 
+  //Realiza um deposito para conta do usuário ativo
   deposit(depositValue: number): Observable<DepositDtoResponse> {
     const depositRequest: DepositDtoRequest = {
       depositValue: depositValue
@@ -28,5 +31,16 @@ export class TransfersService {
 
     return this.http.post<DepositDtoResponse>(
       `${this.balanceApiUrl}/deposit`, depositRequest);
+  }
+
+  transfer(accountId: number, transferValue: number): Observable<TransferDtoResponse> {
+    const transferRequest: TransferDtoRequest = {
+      accountId: accountId,
+      transferValue: transferValue
+    };
+
+    return this.http.post<TransferDtoResponse>(
+      `${this.balanceApiUrl}/transfer`, transferRequest
+    );
   }
 }

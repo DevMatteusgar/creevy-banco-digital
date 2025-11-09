@@ -1,1 +1,108 @@
-<p>transfer-form works!</p>
+<div class="transferencia-container">
+  <h1>Transferência</h1>
+
+  <div class="loading" *ngIf="carregando">
+    Carregando informações da conta...
+  </div>
+
+  <div class="erro" *ngIf="erro">
+    {{ erro }}
+    <button class="btn-retry" (click)="buscarDadosConta()" *ngIf="!carregando">
+      Tentar novamente
+    </button>
+  </div>
+
+  <form
+    *ngIf="!carregando && !erro"
+    [formGroup]="transferForm"
+    (ngSubmit)="realizarTransferencia()"
+  >
+    <div class="form-group">
+      <label for="accountName">Dono da Conta:</label>
+      <input
+        type="text"
+        id="accountName"
+        [value]="accountInfo.accountName"
+        readonly
+        class="readonly-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="accountCpf">CPF:</label>
+      <input
+        type="text"
+        id="accountCpf"
+        [value]="formatarCpf(accountInfo.accountCpf)"
+        readonly
+        class="readonly-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="accountId">Número da Conta (Origem):</label>
+      <input
+        type="text"
+        id="accountId"
+        [value]="accountInfo.accountId"
+        readonly
+        class="readonly-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="contaDestino">Conta Destino (ID):</label>
+      <input
+        type="number"
+        id="contaDestino"
+        formControlName="contaDestino"
+        placeholder="Digite o número da conta de destino"
+        [class.input-erro]="contaDestino?.invalid && contaDestino?.touched"
+        [disabled]="processando"
+      >
+
+      <div class="erro-validacao" *ngIf="contaDestino?.invalid && contaDestino?.touched">
+        <span *ngIf="contaDestino?.errors?.['required']">
+          O número da conta destino é obrigatório.
+        </span>
+        <span *ngIf="contaDestino?.errors?.['min']">
+          Por favor, informe um número de conta válido.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="quantia">Quantia (R$):</label>
+      <input
+        type="text"
+        id="quantia"
+        formControlName="quantia"
+        (input)="formatarMoeda($event)"
+        placeholder="0,00"
+        [class.input-erro]="quantiaInvalida"
+        [disabled]="processando"
+      >
+
+      <div class="erro-validacao" *ngIf="quantiaInvalida">
+        <span *ngIf="quantia?.errors?.['required']">
+          O campo quantia é obrigatório.
+        </span>
+        <span *ngIf="quantia?.errors?.['min'] || quantia?.errors?.['valorInvalido']">
+          Por favor, informe uma quantia válida maior que zero.
+        </span>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn-transferir"
+      [disabled]="!formularioValido || processando"
+    >
+      {{ processando ? 'Processando...' : 'Transferir' }}
+    </button>
+
+    <div class="sucesso" *ngIf="sucesso">
+      {{ mensagemSucesso }}
+    </div>
+  </form>
+</div>
