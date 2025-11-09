@@ -6,10 +6,11 @@ import app.back_end.transfer.dto.response.DepositDtoResponse;
 import app.back_end.transfer.dto.response.TransferDtoResponse;
 import app.back_end.transfer.model.TransferModel;
 import app.back_end.transfer.service.TransferService;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,22 +24,26 @@ public class TransferController {
 
     @PostMapping("deposit")
     public ResponseEntity<DepositDtoResponse> deposit(
-            HttpServletRequest request, //Vem pelo header possibilitando saber o usuário ativo
+            @AuthenticationPrincipal User user,
             @RequestBody DepositDtoRequest depositForm
-            ){
-        String email = (String) request.getAttribute("userId");
+    ) {
+        String email = user.getUsername();
         DepositDtoResponse response = transferService.deposit(email, depositForm.getDepositValue());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("transfer")
     public ResponseEntity<TransferDtoResponse> transfer(
-            @RequestBody TransferDtoRequest transferForm,
-            HttpServletRequest request
-    ){
-        String email = (String) request.getAttribute("userId");
-        TransferDtoResponse response = transferService.transfer(transferForm.getAccountId(), transferForm.getTransferValue(), email);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+            @AuthenticationPrincipal User user,
+            @RequestBody TransferDtoRequest transferForm
+    ) {
+        String email = user.getUsername();
+        TransferDtoResponse response = transferService.transfer(
+                transferForm.getAccountId(),
+                transferForm.getTransferValue(),
+                email
+        );
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("listAllTransfers")

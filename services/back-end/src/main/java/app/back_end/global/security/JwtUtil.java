@@ -1,4 +1,4 @@
-package app.back_end.auth.security;
+package app.back_end.global.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

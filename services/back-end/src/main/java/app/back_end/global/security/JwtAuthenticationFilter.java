@@ -1,4 +1,4 @@
-package app.back_end.auth.security;
+package app.back_end.global.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,11 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,21 +37,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         System.out.println("[JWT] Verificando rota: " + path);
 
-        // Permitir rotas públicas
+        // Libera endpoints públicos
         if (path.startsWith("/auth") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println("[JWT] Authorization header: " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.out.println("[JWT] Token ausente ou inválido.");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Token não fornecido ou inválido\"}");
             return;
         }
 
         String token = authHeader.substring(7);
+        System.out.println("[JWT] Token extraído");
 
         try {
             Claims claims = Jwts.parserBuilder()
@@ -55,17 +64,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .parseClaimsJws(token)
                     .getBody();
 
-            System.out.println("[JWT] Token válido para usuário: " + claims.getSubject());
+            String email = claims.getSubject();
+            System.out.println("[JWT] Token válido para email: " + email);
 
-            // (Opcional) Adiciona informações do usuário no request
-            request.setAttribute("userId", claims.getSubject());
+            // Cria o objeto de autenticação com o e-mail como "usuário"
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            new User(email, "", Collections.emptyList()),  // principal
+                            null,                                           // credentials
+                            Collections.emptyList()                         // authorities
+                    );
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            // Continua o fluxo normal
+            // Registra o usuário autenticado no contexto de segurança
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(request, response);
 
         } catch (JwtException e) {
             System.out.println("[JWT] Token inválido: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Token inválido ou expirado\"}");
         }
     }
 }
