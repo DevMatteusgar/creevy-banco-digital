@@ -11,6 +11,7 @@
         <tr>
           <th>Data</th>
           <th>Operação</th>
+          <th>Remetente</th>
           <th>Destinatário</th>
           <th>CPF</th>
           <th class="text-right">Valor</th>
@@ -26,7 +27,7 @@
           <!-- Data -->
           <td>{{ formatarData(transacao.date) }}</td>
 
-          <!-- Operação (sem badge) -->
+          <!-- Operação -->
           <td class="operacao">
             {{
               transacao.operationType === 'Deposit'
@@ -39,13 +40,16 @@
             }}
           </td>
 
+          <!-- Remetente -->
+          <td>{{ transacao.senderName }}</td>
+
           <!-- Destinatário -->
           <td>{{ transacao.receiverName }}</td>
 
           <!-- CPF -->
           <td>{{ transacao.receiverCpf }}</td>
 
-          <!-- Valor -->
+          <!-- Valor (sem seta) -->
           <td
             class="valor"
             [ngClass]="{
@@ -53,16 +57,6 @@
                 positivo: transacao.operationType !== 'TransferSend'
               }"
           >
-              <span
-                class="seta"
-                [ngClass]="{
-                  verde: transacao.operationType !== 'TransferSend',
-                  vermelha: transacao.operationType === 'TransferSend'
-                }"
-              >
-                {{ transacao.operationType === 'TransferSend' ? '🔻' : '🔺' }}
-              </span>
-
             {{
               transacao.operationType === 'TransferSend'
                 ? '-' + formatarValor(transacao.amount)
@@ -71,9 +65,8 @@
           </td>
         </tr>
 
-        <!-- Nenhuma transação -->
         <tr *ngIf="transacoesLimitadas.length === 0">
-          <td colspan="5" class="empty">Nenhuma transação disponível</td>
+          <td colspan="6" class="empty">Nenhuma transação disponível</td>
         </tr>
         </tbody>
       </table>

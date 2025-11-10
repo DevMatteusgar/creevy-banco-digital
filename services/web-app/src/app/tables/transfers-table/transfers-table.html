@@ -1,7 +1,7 @@
-<div class="container fade-in">
+<div class="container">
   <div class="card">
     <div class="header">
-      <h1>Extrato Bancário</h1>
+      <h1>Extrato bancário</h1>
       <p>Visualize suas transferências e depósitos</p>
     </div>
 
@@ -21,46 +21,24 @@
       <div class="filtros-horizontal">
         <div class="filtro-grupo">
           <label for="dataMin">Data Mínima:</label>
-          <input
-            type="date"
-            id="dataMin"
-            [(ngModel)]="filtros.dataMin"
-            (ngModelChange)="aplicarFiltros()"
-          />
+          <input type="date" id="dataMin" [(ngModel)]="filtros.dataMin" (ngModelChange)="aplicarFiltros()" />
         </div>
 
         <div class="filtro-grupo">
           <label for="dataMax">Data Máxima:</label>
-          <input
-            type="date"
-            id="dataMax"
-            [(ngModel)]="filtros.dataMax"
-            (ngModelChange)="aplicarFiltros()"
-          />
+          <input type="date" id="dataMax" [(ngModel)]="filtros.dataMax" (ngModelChange)="aplicarFiltros()" />
         </div>
 
         <div class="filtro-grupo">
           <label for="valorMin">Valor Mínimo:</label>
-          <input
-            type="number"
-            id="valorMin"
-            placeholder="R$ 0,00"
-            [(ngModel)]="filtros.valorMin"
-            (ngModelChange)="aplicarFiltros()"
-            step="0.01"
-          />
+          <input type="number" id="valorMin" placeholder="R$ 0,00"
+                 [(ngModel)]="filtros.valorMin" (ngModelChange)="aplicarFiltros()" step="0.01" />
         </div>
 
         <div class="filtro-grupo">
           <label for="valorMax">Valor Máximo:</label>
-          <input
-            type="number"
-            id="valorMax"
-            placeholder="R$ 0,00"
-            [(ngModel)]="filtros.valorMax"
-            (ngModelChange)="aplicarFiltros()"
-            step="0.01"
-          />
+          <input type="number" id="valorMax" placeholder="R$ 0,00"
+                 [(ngModel)]="filtros.valorMax" (ngModelChange)="aplicarFiltros()" step="0.01" />
         </div>
 
         <button class="btn-limpar" (click)="limparFiltros()">Limpar Filtros</button>
@@ -74,18 +52,16 @@
         <tr>
           <th>Data</th>
           <th>Operação</th>
+          <th>Remetente</th>
           <th>Destinatário</th>
           <th>CPF</th>
           <th class="text-right">Valor</th>
         </tr>
         </thead>
-
         <tbody>
         <tr *ngFor="let transacao of transacoesFiltradas">
-          <!-- Data -->
           <td>{{ formatarData(transacao.date) }}</td>
 
-          <!-- Operação (sem badge) -->
           <td class="operacao">
             {{
               transacao.operationType === 'Deposit'
@@ -98,30 +74,17 @@
             }}
           </td>
 
-          <!-- Destinatário -->
+          <td>{{ transacao.senderName }}</td>
           <td>{{ transacao.receiverName }}</td>
-
-          <!-- CPF -->
           <td>{{ transacao.receiverCpf }}</td>
 
-          <!-- Valor com seta e cor -->
           <td
             class="valor"
             [ngClass]="{
-                negativo: transacao.operationType === 'TransferSend',
-                positivo: transacao.operationType !== 'TransferSend'
-              }"
+              positivo: transacao.operationType !== 'TransferSend',
+              negativo: transacao.operationType === 'TransferSend'
+            }"
           >
-              <span
-                class="seta"
-                [ngClass]="{
-                  verde: transacao.operationType !== 'TransferSend',
-                  vermelha: transacao.operationType === 'TransferSend'
-                }"
-              >
-                {{ transacao.operationType === 'TransferSend' ? '🔻' : '🔺' }}
-              </span>
-
             {{
               transacao.operationType === 'TransferSend'
                 ? '-' + formatarValor(transacao.amount)
@@ -131,12 +94,11 @@
         </tr>
 
         <tr *ngIf="transacoesFiltradas.length === 0">
-          <td colspan="5" class="empty">Nenhuma transação disponível</td>
+          <td colspan="6" class="empty">Nenhuma transação disponível</td>
         </tr>
         </tbody>
       </table>
 
-      <!-- FOOTER -->
       <div class="footer">
         <p>Total de transações: <strong>{{ transacoesFiltradas.length }}</strong></p>
         <p class="total">

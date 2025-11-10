@@ -157,14 +157,37 @@ public class TransferService {
     }
 
     public List<TransferModel> findTransfersByUserEmail(String email) {
-
-        // Busca o usuário pelo e-mail (presente no token JWT)
         UserModel user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o e-mail: " + email));
 
         Long userId = user.getId();
 
-        // Retorna todas as transferências onde ele foi remetente ou destinatário
-        return transferRepository.findBySenderIdOrReceiverId(userId, userId);
+        // Busca tudo que envolve o usuário
+        List<TransferModel> transfers = transferRepository.findBySenderIdOrReceiverId(userId, userId);
+
+        // Filtra corretamente e ajusta o tipo
+        List<TransferModel> filtered = transfers.stream()
+                .filter(t -> {
+                    if (t.getSenderId() != null && t.getSenderId().equals(userId)) {
+                        // garante que aparece apenas TransferSend
+                        return "TransferSend".equals(t.getOperationType()) || t.getOperationType() == null;
+                    } else if (t.getReceiverId() != null && t.getReceiverId().equals(userId)) {
+                        // garante que aparece apenas TransferReceive
+                        return "TransferReceive".equals(t.getOperationType()) || t.getOperationType() == null;
+                    }
+                    return false;
+                })
+                .toList();
+
+        // Ajusta tipo (só por segurança, caso venha nulo)
+        filtered.forEach(t -> {
+            if (t.getSenderId() != null && t.getSenderId().equals(userId)) {
+                t.setOperationType("TransferSend");
+            } else if (t.getReceiverId() != null && t.getReceiverId().equals(userId)) {
+                t.setOperationType("TransferReceive");
+            }
+        });
+
+        return filtered;
     }
 }

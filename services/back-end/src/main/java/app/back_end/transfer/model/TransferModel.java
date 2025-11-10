@@ -145,4 +145,7 @@ public class TransferModel {
     public void setReceiverName(String receiverName) { this.receiverName = receiverName; }
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
 }
