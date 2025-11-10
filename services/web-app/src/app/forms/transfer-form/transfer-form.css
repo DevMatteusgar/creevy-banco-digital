@@ -14,6 +14,20 @@ h1 {
   font-size: 28px;
 }
 
+.secao-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+.separador {
+  border: none;
+  border-top: 2px solid #e0e0e0;
+  margin: 30px 0;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -58,6 +72,60 @@ input:disabled {
 .input-erro:focus {
   border-color: #c62828 !important;
   box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.25);
+}
+
+/* Card de informações da conta destino */
+.info-conta-destino {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.info-valor {
+  font-weight: 600;
+}
+
+.info-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1976d2;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+}
+
+.loading-icon {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .btn-transferir {

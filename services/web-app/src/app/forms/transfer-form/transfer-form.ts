@@ -24,6 +24,11 @@ export class TransferForm implements OnInit {
     accountCpf: ''
   };
 
+  // Informações da conta destino
+  destinationAccountInfo: AccountInfoDtoResponse | null = null;
+  buscandoContaDestino: boolean = false;
+  erroContaDestino: string = '';
+
   carregando: boolean = true;
   erro: string = '';
   processando: boolean = false;
@@ -48,6 +53,16 @@ export class TransferForm implements OnInit {
       if (valor && typeof valor === 'string' && !valor.includes(',')) {
         const valorFormatado = this.formatarMoedaString(valor);
         this.transferForm.get('quantia')?.setValue(valorFormatado, { emitEvent: false });
+      }
+    });
+
+    // Busca informações da conta destino quando o usuário digitar o ID
+    this.transferForm.get('contaDestino')?.valueChanges.subscribe(contaId => {
+      if (contaId && contaId > 0) {
+        this.buscarInfoContaDestino(contaId);
+      } else {
+        this.destinationAccountInfo = null;
+        this.erroContaDestino = '';
       }
     });
   }
@@ -91,9 +106,44 @@ export class TransferForm implements OnInit {
     });
   }
 
+  //Metodo para buscar informações da conta destino
+  buscarInfoContaDestino(contaId: number) {
+    this.buscandoContaDestino = true;
+    this.erroContaDestino = '';
+    this.destinationAccountInfo = null;
+
+    this.transfersService.getTransferUserInfo(contaId).subscribe({
+      next: (dados) => {
+        this.destinationAccountInfo = dados;
+        this.buscandoContaDestino = false;
+      },
+      error: (error) => {
+        console.error('Erro ao buscar dados da conta destino:', error);
+        this.buscandoContaDestino = false;
+
+        if (error.status === 404) {
+          this.erroContaDestino = 'Conta destino não encontrada.';
+        } else if (error.status === 401) {
+          this.erroContaDestino = 'Sessão expirada.';
+        } else {
+          this.erroContaDestino = 'Erro ao buscar informações da conta.';
+        }
+
+        this.destinationAccountInfo = null;
+      }
+    });
+  }
+
   realizarTransferencia() {
     if (this.transferForm.invalid) {
       this.transferForm.markAllAsTouched();
+      return;
+    }
+
+    // Validação adicional: não permitir transferência para a mesma conta
+    const contaDestino = this.transferForm.get('contaDestino')?.value;
+    if (contaDestino === this.accountInfo.accountId) {
+      this.erro = 'Não é possível transferir para a mesma conta.';
       return;
     }
 
@@ -101,7 +151,6 @@ export class TransferForm implements OnInit {
     this.sucesso = false;
     this.erro = '';
 
-    const contaDestino = this.transferForm.get('contaDestino')?.value;
     const quantiaFormatada = this.transferForm.get('quantia')?.value;
     const valorNumerico = this.converterParaNumero(quantiaFormatada);
 
@@ -111,6 +160,7 @@ export class TransferForm implements OnInit {
         this.mensagemSucesso = response.message || 'Transferência realizada com sucesso!';
         this.processando = false;
         this.transferForm.reset();
+        this.destinationAccountInfo = null;
         this.buscarDadosConta();
 
         setTimeout(() => {
@@ -182,6 +232,6 @@ export class TransferForm implements OnInit {
   }
 
   get formularioValido(): boolean {
-    return this.transferForm.valid;
+    return this.transferForm.valid && !this.erroContaDestino;
   }
 }

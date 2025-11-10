@@ -23,6 +23,11 @@ export class TransfersService {
     return this.http.get<AccountInfoDtoResponse>(`${this.userApiUrl}/myInfo`);
   }
 
+  //Retorna os dados do usuário destino para transferência
+  getTransferUserInfo(userId: number): Observable<AccountInfoDtoResponse> {
+    return this.http.get<AccountInfoDtoResponse>(`${this.userApiUrl}/accountInfo/${userId}`);
+  }
+
   //Realiza um deposito para conta do usuário ativo
   deposit(depositValue: number): Observable<DepositDtoResponse> {
     const depositRequest: DepositDtoRequest = {
@@ -33,6 +38,7 @@ export class TransfersService {
       `${this.balanceApiUrl}/deposit`, depositRequest);
   }
 
+  //Transferência entre contas
   transfer(accountId: number, transferValue: number): Observable<TransferDtoResponse> {
     const transferRequest: TransferDtoRequest = {
       accountId: accountId,
