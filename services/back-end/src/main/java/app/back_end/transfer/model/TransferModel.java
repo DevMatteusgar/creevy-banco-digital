@@ -110,17 +110,18 @@ public class TransferModel {
     }
 
     //Construtor de depósito
-    public static TransferModel createDepositTransaction(UserModel receiver, Double amount, Double balanceAfterOperation){
+    public static TransferModel createDepositTransaction(UserModel receiver, Double amount, Double balanceAfterOperation) {
         TransferModel transaction = new TransferModel();
         transaction.user = receiver;
-        transaction.receiverId = receiver.getId();
-        transaction.receiverCpf = receiver.getCpf();
-        transaction.receiverName = receiver.getName();
-        transaction.operationType = "Deposit";
-        transaction.amount = amount;
-        transaction.balanceAfterOperation = balanceAfterOperation;
-        transaction.description = "Depósito efetuado por " + receiver.getName();
-        transaction.date = LocalDateTime.now();
+        transaction.setReceiverId(receiver.getId());
+        transaction.setReceiverCpf(receiver.getCpf());
+        transaction.setReceiverName(receiver.getName());
+        transaction.setSenderName(receiver.getName());//
+        transaction.setOperationType("Deposit");
+        transaction.setAmount(amount);
+        transaction.setBalanceAfterOperation(balanceAfterOperation);
+        transaction.setDescription("Depósito efetuado por " + receiver.getName());
+        transaction.setDate(LocalDateTime.now());
         return transaction;
     }
 
@@ -147,5 +148,14 @@ public class TransferModel {
     public void setAmount(Double amount) { this.amount = amount; }
     public void setOperationType(String operationType) {
         this.operationType = operationType;
+    }
+    public void setBalanceAfterOperation(Double balanceAfterOperation) {
+        this.balanceAfterOperation = balanceAfterOperation;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

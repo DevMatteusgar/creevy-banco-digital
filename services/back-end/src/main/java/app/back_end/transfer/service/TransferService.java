@@ -162,28 +162,32 @@ public class TransferService {
 
         Long userId = user.getId();
 
-        // Busca tudo que envolve o usuário
+        // Busca tudo que envolve o usuário (enviado, recebido ou depósito)
         List<TransferModel> transfers = transferRepository.findBySenderIdOrReceiverId(userId, userId);
 
-        // Filtra corretamente e ajusta o tipo
+        // Filtra de acordo com o contexto do usuário
         List<TransferModel> filtered = transfers.stream()
                 .filter(t -> {
-                    if (t.getSenderId() != null && t.getSenderId().equals(userId)) {
-                        // garante que aparece apenas TransferSend
-                        return "TransferSend".equals(t.getOperationType()) || t.getOperationType() == null;
+                    if ("Deposit".equalsIgnoreCase(t.getOperationType())) {
+                        // depósitos sempre pertencem ao próprio usuário
+                        return t.getReceiverId() != null && t.getReceiverId().equals(userId);
+                    } else if (t.getSenderId() != null && t.getSenderId().equals(userId)) {
+                        // transferências enviadas
+                        return "TransferSend".equalsIgnoreCase(t.getOperationType()) || t.getOperationType() == null;
                     } else if (t.getReceiverId() != null && t.getReceiverId().equals(userId)) {
-                        // garante que aparece apenas TransferReceive
-                        return "TransferReceive".equals(t.getOperationType()) || t.getOperationType() == null;
+                        // transferências recebidas
+                        return "TransferReceive".equalsIgnoreCase(t.getOperationType()) || t.getOperationType() == null;
                     }
                     return false;
                 })
                 .toList();
 
-        // Ajusta tipo (só por segurança, caso venha nulo)
+        // Garante que o tipo esteja ajustado corretamente
         filtered.forEach(t -> {
             if (t.getSenderId() != null && t.getSenderId().equals(userId)) {
                 t.setOperationType("TransferSend");
-            } else if (t.getReceiverId() != null && t.getReceiverId().equals(userId)) {
+            } else if (t.getReceiverId() != null && t.getReceiverId().equals(userId)
+                    && !"Deposit".equalsIgnoreCase(t.getOperationType())) {
                 t.setOperationType("TransferReceive");
             }
         });
