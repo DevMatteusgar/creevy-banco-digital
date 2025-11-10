@@ -1,0 +1,20 @@
+.page-container {
+  display: flex;
+  flex-direction: row; /* lado a lado */
+  align-items: flex-start; /* topo alinhado */
+  gap: 20px; /* espaço entre form e tabela */
+  padding: 20px;
+  width: 100%; /* ocupa toda a largura da página */
+  box-sizing: border-box;
+}
+
+app-deposit-form {
+  flex: 1; /* 40% do espaço */
+  min-width: 400px;
+}
+
+app-last-transfers-table {
+  flex: 1.8; /* 60% do espaço */
+  min-width: 300px;
+  margin-top: 30px;
+}
