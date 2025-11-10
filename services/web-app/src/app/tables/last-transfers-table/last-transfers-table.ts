@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import {TransfersService} from '../../services/transfer-service/transfers-service';
+import { TransfersService } from '../../services/transfer-service/transfers-service';
 import { TransferModel } from '../../interfaces/TransferModel';
 
 @Component({
@@ -32,9 +32,10 @@ export class LastTransfersTable implements OnInit {
 
     this.transfersService.getMyTransfers().subscribe({
       next: (dados) => {
-        this.transfers = dados;
+        // Ordena do mais recente para o mais antigo
+        this.transfers = dados.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         this.carregando = false;
-        console.log('Transferências carregadas:', dados);
+        console.log('Transferências carregadas:', this.transfers);
       },
       error: (erro) => {
         console.error('Erro ao carregar transferências:', erro);
@@ -44,6 +45,7 @@ export class LastTransfersTable implements OnInit {
     });
   }
 
+  // Limita às últimas 5 transações
   get transacoesLimitadas(): TransferModel[] {
     return this.transfers.slice(0, 5);
   }

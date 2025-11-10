@@ -24,10 +24,8 @@
           class="linha-animada"
           [style.animation-delay]="i * 0.1 + 's'"
         >
-          <!-- Data -->
           <td>{{ formatarData(transacao.date) }}</td>
 
-          <!-- Operação -->
           <td class="operacao">
             {{
               transacao.operationType === 'Deposit'
@@ -49,13 +47,13 @@
           <!-- CPF -->
           <td>{{ transacao.receiverCpf }}</td>
 
-          <!-- Valor (sem seta) -->
+          <!-- Valor (sem seta, com cor) -->
           <td
             class="valor"
             [ngClass]="{
-                negativo: transacao.operationType === 'TransferSend',
-                positivo: transacao.operationType !== 'TransferSend'
-              }"
+              negativo: transacao.operationType === 'TransferSend',
+              positivo: transacao.operationType !== 'TransferSend'
+            }"
           >
             {{
               transacao.operationType === 'TransferSend'

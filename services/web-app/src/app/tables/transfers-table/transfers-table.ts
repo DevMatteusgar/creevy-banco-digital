@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {TransfersService} from '../../services/transfer-service/transfers-service';
+import { TransfersService } from '../../services/transfer-service/transfers-service';
 import { TransferModel } from '../../interfaces/TransferModel';
-import {TransfersTableFilters} from '../../interfaces/TransfersTableFilters';
+import { TransfersTableFilters } from '../../interfaces/TransfersTableFilters';
 
 @Component({
   selector: 'app-transfers-table',
@@ -33,7 +33,8 @@ export class TransfersTable implements OnInit {
   carregarTransferencias(): void {
     this.transfersService.getMyTransfers().subscribe({
       next: (dados) => {
-        this.transacoes = dados;
+        // Ordena do mais recente para o mais antigo
+        this.transacoes = dados.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         this.aplicarFiltros();
       },
       error: (erro) => {
