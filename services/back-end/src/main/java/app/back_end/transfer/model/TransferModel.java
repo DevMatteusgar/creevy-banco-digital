@@ -2,6 +2,7 @@ package app.back_end.transfer.model;
 
 import app.back_end.auth.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -47,6 +48,7 @@ public class TransferModel {
 
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Sao_Paulo")
     private LocalDateTime date;
 
     //Construtor vazio exigido pelo JPA

@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: app_db
       POSTGRES_USER: app_user
       POSTGRES_PASSWORD: app_pass
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
     ports:
       - "5432:5432"
     volumes:
@@ -32,6 +34,7 @@ services:
       DATABASE_USER: app_user
       DATABASE_PASSWORD: app_pass
       JWT_SECRET: minhachavesupersecretaasuperseguraa1234567890abcdefghijklmn
+      TZ: America/Sao_Paulo
     depends_on:
       - postgres
     networks:

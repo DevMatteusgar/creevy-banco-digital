@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/balance")
+@RequestMapping("/transfer")
 public class TransferController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class TransferController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("transfer")
+    @PostMapping("transferToUser")
     public ResponseEntity<TransferDtoResponse> transfer(
             @AuthenticationPrincipal User user,
             @RequestBody TransferDtoRequest transferForm

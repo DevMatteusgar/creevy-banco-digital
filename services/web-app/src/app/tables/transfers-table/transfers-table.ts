@@ -33,8 +33,12 @@ export class TransfersTable implements OnInit {
   carregarTransferencias(): void {
     this.transfersService.getMyTransfers().subscribe({
       next: (dados) => {
+        console.log('Dados recebidos:', dados[0]); // DEBUG: veja o formato da data
+
         // Ordena do mais recente para o mais antigo
-        this.transacoes = dados.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.transacoes = dados.sort((a, b) =>
+          this.converterParaDate(b.date).getTime() - this.converterParaDate(a.date).getTime()
+        );
         this.aplicarFiltros();
       },
       error: (erro) => {
@@ -45,23 +49,38 @@ export class TransfersTable implements OnInit {
 
   aplicarFiltros(): void {
     this.transacoesFiltradas = this.transacoes.filter(transacao => {
+      // Filtro por destinatário
       if (this.filtros.destinatario &&
         !transacao.receiverName?.toLowerCase().includes(this.filtros.destinatario.toLowerCase())) {
         return false;
       }
 
-      if (this.filtros.dataMin && transacao.date < this.filtros.dataMin) {
-        return false;
+      // Converte a data da transação para comparação
+      const dataTransacao = this.converterParaDate(transacao.date);
+      const dataTransacaoSemHora = new Date(dataTransacao.getFullYear(), dataTransacao.getMonth(), dataTransacao.getDate());
+
+      // Filtro por data mínima
+      if (this.filtros.dataMin) {
+        const dataMin = new Date(this.filtros.dataMin + 'T00:00:00');
+        if (dataTransacaoSemHora < dataMin) {
+          return false;
+        }
       }
 
-      if (this.filtros.dataMax && transacao.date > this.filtros.dataMax) {
-        return false;
+      // Filtro por data máxima
+      if (this.filtros.dataMax) {
+        const dataMax = new Date(this.filtros.dataMax + 'T23:59:59');
+        if (dataTransacaoSemHora > dataMax) {
+          return false;
+        }
       }
 
+      // Filtro por valor mínimo
       if (this.filtros.valorMin !== null && transacao.amount < this.filtros.valorMin) {
         return false;
       }
 
+      // Filtro por valor máximo
       if (this.filtros.valorMax !== null && transacao.amount > this.filtros.valorMax) {
         return false;
       }
@@ -92,13 +111,35 @@ export class TransfersTable implements OnInit {
     }).format(valor);
   }
 
+  /**
+   * Converte string de data para objeto Date
+   * Trata casos com ou sem timezone
+   */
+  private converterParaDate(dataString: string): Date {
+    // Se já tiver timezone (+/-), usa direto
+    if (dataString.includes('+') || dataString.includes('-') || dataString.endsWith('Z')) {
+      return new Date(dataString);
+    }
+
+    // Se não tiver timezone, assume que é horário local (não UTC)
+    // Adiciona 'T' se não tiver e força interpretação local
+    const dataComT = dataString.includes('T') ? dataString : dataString.replace(' ', 'T');
+    return new Date(dataComT + '-03:00'); // Força timezone de Brasília
+  }
+
+  /**
+   * Formata data para exibição
+   */
   formatarData(data: string): string {
-    return new Date(data).toLocaleString('pt-BR', {
+    const dataObj = this.converterParaDate(data);
+
+    return dataObj.toLocaleString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'America/Sao_Paulo' // Garante que exibe no horário de Brasília
     });
   }
 

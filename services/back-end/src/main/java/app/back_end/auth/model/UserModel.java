@@ -1,6 +1,7 @@
 package app.back_end.auth.model;
 
 import app.back_end.transfer.model.TransferModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -30,6 +31,7 @@ public class UserModel {
 
     //Data de criação
     @Column(name = "creation_date", updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Sao_Paulo")
     private LocalDateTime creationDate;
 
     //Balance do usuario = 0
@@ -46,6 +48,7 @@ public class UserModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Indica o lado "gerenciador" da relação
     private List<TransferModel> transactions = new ArrayList<>();
+
 
     //Pre persist
     @PrePersist
@@ -88,7 +91,9 @@ public class UserModel {
         return creationDate;
     }
     public Double getTotalBalance() {
-        return totalBalance;
+        Double savings = savingsBalance != null ? savingsBalance : 0.0;
+        Double investments = investmentsBalance != null ? investmentsBalance : 0.0;
+        return savings + investments;
     }
     public Double getSavingsBalance() {
         return savingsBalance;

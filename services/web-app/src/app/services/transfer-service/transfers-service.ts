@@ -14,7 +14,7 @@ import {TransferModel} from '../../interfaces/TransferModel';
 })
 export class TransfersService {
 
-  private balanceApiUrl: string = 'http://192.168.56.10:8080/balance'
+  private transferApiUrl: string = 'http://192.168.56.10:8080/transfer'
   private userApiUrl: string = 'http://192.168.56.10:8080/user'
 
   constructor(private http: HttpClient) {}
@@ -36,7 +36,7 @@ export class TransfersService {
     };
 
     return this.http.post<DepositDtoResponse>(
-      `${this.balanceApiUrl}/deposit`, depositRequest);
+      `${this.transferApiUrl}/deposit`, depositRequest);
   }
 
   //Transferência entre contas
@@ -47,19 +47,19 @@ export class TransfersService {
     };
 
     return this.http.post<TransferDtoResponse>(
-      `${this.balanceApiUrl}/transfer`, transferRequest
+      `${this.transferApiUrl}/transferToUser`, transferRequest
     );
   }
 
   //Busca todas as transferências do usuário (senderId ou receiverId)
   getAllUserTransfers(userId: number): Observable<TransferModel[]> {
     return this.http.get<TransferModel[]>(
-      `${this.balanceApiUrl}/ListAllUserTransfers/${userId}`
+      `${this.transferApiUrl}/ListAllUserTransfers/${userId}`
     );
   }
 
   //Lista transferências do usuário autenticado (token JWT)
   getMyTransfers(): Observable<TransferModel[]> {
-    return this.http.get<TransferModel[]>(`${this.balanceApiUrl}/ListMyTransfers`);
+    return this.http.get<TransferModel[]>(`${this.transferApiUrl}/ListMyTransfers`);
   }
 }
