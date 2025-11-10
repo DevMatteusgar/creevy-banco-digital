@@ -1,13 +1,12 @@
-<div class="container">
+<div class="container fade-in">
   <div class="card">
     <div class="header">
-      <h1>Extrato bancário</h1>
-      <p>Visualize transações financeiras</p>
+      <h1>Extrato Bancário</h1>
+      <p>Visualize suas transferências e depósitos</p>
     </div>
 
     <!-- FILTROS -->
     <div class="filtros">
-      <!-- Destinatário no topo -->
       <div class="filtro-destinatario">
         <label for="destinatario">Destinatário:</label>
         <input
@@ -19,7 +18,6 @@
         />
       </div>
 
-      <!-- Filtros horizontais embaixo -->
       <div class="filtros-horizontal">
         <div class="filtro-grupo">
           <label for="dataMin">Data Mínima:</label>
@@ -65,42 +63,82 @@
           />
         </div>
 
-        <button class="btn-limpar" (click)="limparFiltros()">
-          Limpar Filtros
-        </button>
+        <button class="btn-limpar" (click)="limparFiltros()">Limpar Filtros</button>
       </div>
     </div>
 
+    <!-- TABELA -->
     <div class="content">
       <table>
         <thead>
         <tr>
           <th>Data</th>
+          <th>Operação</th>
           <th>Destinatário</th>
-          <th>Conta</th>
+          <th>CPF</th>
           <th class="text-right">Valor</th>
         </tr>
         </thead>
+
         <tbody>
         <tr *ngFor="let transacao of transacoesFiltradas">
-          <td>{{ formatarData(transacao.data) }}</td>
-          <td>{{ transacao.destinatario }}</td>
-          <td class="conta">{{ transacao.conta }}</td>
-          <td class="valor">{{ formatarValor(transacao.valor) }}</td>
-        </tr>
-        <tr *ngIf="transacoesFiltradas.length === 0">
-          <td colspan="4" class="empty">
-            Nenhuma transação disponível
+          <!-- Data -->
+          <td>{{ formatarData(transacao.date) }}</td>
+
+          <!-- Operação (sem badge) -->
+          <td class="operacao">
+            {{
+              transacao.operationType === 'Deposit'
+                ? 'Depósito'
+                : transacao.operationType === 'TransferSend'
+                  ? 'Transferência enviada'
+                  : transacao.operationType === 'TransferReceive'
+                    ? 'Transferência recebida'
+                    : transacao.operationType
+            }}
           </td>
+
+          <!-- Destinatário -->
+          <td>{{ transacao.receiverName }}</td>
+
+          <!-- CPF -->
+          <td>{{ transacao.receiverCpf }}</td>
+
+          <!-- Valor com seta e cor -->
+          <td
+            class="valor"
+            [ngClass]="{
+                negativo: transacao.operationType === 'TransferSend',
+                positivo: transacao.operationType !== 'TransferSend'
+              }"
+          >
+              <span
+                class="seta"
+                [ngClass]="{
+                  verde: transacao.operationType !== 'TransferSend',
+                  vermelha: transacao.operationType === 'TransferSend'
+                }"
+              >
+                {{ transacao.operationType === 'TransferSend' ? '🔻' : '🔺' }}
+              </span>
+
+            {{
+              transacao.operationType === 'TransferSend'
+                ? '-' + formatarValor(transacao.amount)
+                : formatarValor(transacao.amount)
+            }}
+          </td>
+        </tr>
+
+        <tr *ngIf="transacoesFiltradas.length === 0">
+          <td colspan="5" class="empty">Nenhuma transação disponível</td>
         </tr>
         </tbody>
       </table>
 
+      <!-- FOOTER -->
       <div class="footer">
-        <p>
-          Total de transações:
-          <strong>{{ transacoesFiltradas.length }}</strong>
-        </p>
+        <p>Total de transações: <strong>{{ transacoesFiltradas.length }}</strong></p>
         <p class="total">
           <span>Valor total: </span>
           <strong>{{ formatarValor(valorTotal) }}</strong>

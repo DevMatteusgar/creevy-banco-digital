@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TransfersService } from '../../services/transfers-service';
+import { TransfersService } from '../../services/transfer-service/transfers-service';
 import { AccountInfoDtoResponse } from '../../interfaces/AccountInfoDtoResponse';
 
 @Component({

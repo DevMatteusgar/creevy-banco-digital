@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-
-interface Transacao {
-  id: number;
-  data: string;
-  destinatario: string;
-  conta: string;
-  valor: number;
-}
+import { HttpClientModule } from '@angular/common/http';
+import {TransfersService} from '../../services/transfer-service/transfers-service';
+import { TransferModel } from '../../interfaces/TransferModel';
 
 @Component({
   selector: 'app-last-transfers-table',
@@ -18,33 +12,44 @@ interface Transacao {
     HttpClientModule
   ],
   templateUrl: './last-transfers-table.html',
-  styleUrl: './last-transfers-table.css',
+  styleUrls: ['./last-transfers-table.css'],
 })
-export class LastTransfersTable {
+export class LastTransfersTable implements OnInit {
 
-  transfers: Transacao[] = [];
+  transfers: TransferModel[] = [];
+  carregando: boolean = false;
+  erro: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private transfersService: TransfersService) {}
 
   ngOnInit(): void {
-    // No futuro, carregar dados da API
-    // this.carregarTransacoes();
+    this.carregarTransacoes();
   }
 
   carregarTransacoes(): void {
-    this.http.get<Transacao[]>('https://sua-api.com/transacoes')
-      .subscribe({
-        next: (dados) => this.transfers = dados,
-        error: (erro) => console.error('Erro ao carregar transações:', erro)
-      });
+    this.carregando = true;
+    this.erro = null;
+
+    this.transfersService.getMyTransfers().subscribe({
+      next: (dados) => {
+        this.transfers = dados;
+        this.carregando = false;
+        console.log('Transferências carregadas:', dados);
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar transferências:', erro);
+        this.erro = 'Não foi possível carregar as transferências.';
+        this.carregando = false;
+      }
+    });
   }
 
-  get transacoesLimitadas(): Transacao[] {
+  get transacoesLimitadas(): TransferModel[] {
     return this.transfers.slice(0, 5);
   }
 
   get valorTotal(): number {
-    return this.transfers.reduce((sum, t) => sum + t.valor, 0);
+    return this.transfers.reduce((sum, t) => sum + (t.amount || 0), 0);
   }
 
   formatarValor(valor: number): string {
@@ -55,6 +60,13 @@ export class LastTransfersTable {
   }
 
   formatarData(data: string): string {
-    return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+    const date = new Date(data);
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

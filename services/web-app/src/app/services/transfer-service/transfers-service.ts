@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import {DepositForm} from '../forms/deposit-form/deposit-form';
-import {AccountInfoDtoResponse} from '../interfaces/AccountInfoDtoResponse';
-import {DepositDtoRequest} from '../interfaces/DepositDtoRequest';
-import {DepositDtoResponse} from '../interfaces/DepositDtoResponse';
+import {DepositForm} from '../../forms/deposit-form/deposit-form';
+import {AccountInfoDtoResponse} from '../../interfaces/AccountInfoDtoResponse';
+import {DepositDtoRequest} from '../../interfaces/DepositDtoRequest';
+import {DepositDtoResponse} from '../../interfaces/DepositDtoResponse';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {TransferDtoRequest} from '../interfaces/TransferDtoRequest';
-import {TransferDtoResponse} from '../interfaces/TransferDtoResponse';
+import {TransferDtoRequest} from '../../interfaces/TransferDtoRequest';
+import {TransferDtoResponse} from '../../interfaces/TransferDtoResponse';
+import {TransferModel} from '../../interfaces/TransferModel';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,17 @@ export class TransfersService {
     return this.http.post<TransferDtoResponse>(
       `${this.balanceApiUrl}/transfer`, transferRequest
     );
+  }
+
+  //Busca todas as transferências do usuário (senderId ou receiverId)
+  getAllUserTransfers(userId: number): Observable<TransferModel[]> {
+    return this.http.get<TransferModel[]>(
+      `${this.balanceApiUrl}/ListAllUserTransfers/${userId}`
+    );
+  }
+
+  //Lista transferências do usuário autenticado (token JWT)
+  getMyTransfers(): Observable<TransferModel[]> {
+    return this.http.get<TransferModel[]>(`${this.balanceApiUrl}/ListMyTransfers`);
   }
 }

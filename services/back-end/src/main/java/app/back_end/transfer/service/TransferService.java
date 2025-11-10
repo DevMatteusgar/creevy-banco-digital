@@ -146,6 +146,25 @@ public class TransferService {
     }
 
     public List<TransferModel> listAllTransactions() {
+
         return transferRepository.findAll();
+    }
+
+    public List<TransferModel> findTransfersByUserId(Long userId) {
+
+        //Busca as trasnferências com o mesmo SenderId e receiverID
+        return transferRepository.findBySenderIdOrReceiverId(userId, userId);
+    }
+
+    public List<TransferModel> findTransfersByUserEmail(String email) {
+
+        // Busca o usuário pelo e-mail (presente no token JWT)
+        UserModel user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o e-mail: " + email));
+
+        Long userId = user.getId();
+
+        // Retorna todas as transferências onde ele foi remetente ou destinatário
+        return transferRepository.findBySenderIdOrReceiverId(userId, userId);
     }
 }

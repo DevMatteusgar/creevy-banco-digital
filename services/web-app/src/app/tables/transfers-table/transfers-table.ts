@@ -1,41 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-
-interface Transacao {
-  id: number;
-  data: string;
-  destinatario: string;
-  conta: string;
-  valor: number;
-}
-
-interface Filtros {
-  destinatario: string;
-  dataMin: string;
-  dataMax: string;
-  valorMin: number | null;
-  valorMax: number | null;
-}
+import {TransfersService} from '../../services/transfer-service/transfers-service';
+import { TransferModel } from '../../interfaces/TransferModel';
+import {TransfersTableFilters} from '../../interfaces/TransfersTableFilters';
 
 @Component({
   selector: 'app-transfers-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './transfers-table.html',
-  styleUrl: './transfers-table.css',
+  styleUrls: ['./transfers-table.css'],
 })
 export class TransfersTable implements OnInit {
+  transacoes: TransferModel[] = [];
+  transacoesFiltradas: TransferModel[] = [];
 
-  transacoes: Transacao[] = [];
-  transacoesFiltradas: Transacao[] = [];
-
-  filtros: Filtros = {
+  filtros: TransfersTableFilters = {
     destinatario: '',
     dataMin: '',
     dataMax: '',
@@ -43,49 +24,44 @@ export class TransfersTable implements OnInit {
     valorMax: null
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private transfersService: TransfersService) {}
 
   ngOnInit(): void {
-    // Carrega todos os dados da API uma única vez
-    this.carregarTransacoes();
+    this.carregarTransferencias();
   }
 
-  carregarTransacoes(): void {
-    this.http.get<Transacao[]>('https://sua-api.com/transacoes')
-      .subscribe({
-        next: (dados) => {
-          this.transacoes = dados;
-          this.aplicarFiltros();
-        },
-        error: (erro) => console.error('Erro ao carregar transações:', erro)
-      });
+  carregarTransferencias(): void {
+    this.transfersService.getMyTransfers().subscribe({
+      next: (dados) => {
+        this.transacoes = dados;
+        this.aplicarFiltros();
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar transferências:', erro);
+      }
+    });
   }
 
   aplicarFiltros(): void {
     this.transacoesFiltradas = this.transacoes.filter(transacao => {
-      // Filtro de destinatário
       if (this.filtros.destinatario &&
-        !transacao.destinatario.toLowerCase().includes(this.filtros.destinatario.toLowerCase())) {
+        !transacao.receiverName?.toLowerCase().includes(this.filtros.destinatario.toLowerCase())) {
         return false;
       }
 
-      // Filtro de data mínima
-      if (this.filtros.dataMin && transacao.data < this.filtros.dataMin) {
+      if (this.filtros.dataMin && transacao.date < this.filtros.dataMin) {
         return false;
       }
 
-      // Filtro de data máxima
-      if (this.filtros.dataMax && transacao.data > this.filtros.dataMax) {
+      if (this.filtros.dataMax && transacao.date > this.filtros.dataMax) {
         return false;
       }
 
-      // Filtro de valor mínimo
-      if (this.filtros.valorMin !== null && transacao.valor < this.filtros.valorMin) {
+      if (this.filtros.valorMin !== null && transacao.amount < this.filtros.valorMin) {
         return false;
       }
 
-      // Filtro de valor máximo
-      if (this.filtros.valorMax !== null && transacao.valor > this.filtros.valorMax) {
+      if (this.filtros.valorMax !== null && transacao.amount > this.filtros.valorMax) {
         return false;
       }
 
@@ -105,7 +81,7 @@ export class TransfersTable implements OnInit {
   }
 
   get valorTotal(): number {
-    return this.transacoesFiltradas.reduce((sum, t) => sum + t.valor, 0);
+    return this.transacoesFiltradas.reduce((sum, t) => sum + t.amount, 0);
   }
 
   formatarValor(valor: number): string {
@@ -116,6 +92,17 @@ export class TransfersTable implements OnInit {
   }
 
   formatarData(data: string): string {
-    return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+    return new Date(data).toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  /** Define se a transação é positiva (Depósito) ou negativa (TransferSend) */
+  isPositiva(transacao: TransferModel): boolean {
+    return transacao.operationType === 'Deposit';
   }
 }

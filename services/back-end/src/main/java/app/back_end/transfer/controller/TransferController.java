@@ -51,4 +51,17 @@ public class TransferController {
         List<TransferModel> response = transferService.listAllTransactions();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("ListAllUserTransfers/{userId}")
+    public ResponseEntity<List<TransferModel>> listTransfersByUserId(@PathVariable Long userId) {
+        List<TransferModel> response = transferService.findTransfersByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("ListMyTransfers")
+    public ResponseEntity<List<TransferModel>> listMyTransfers(@AuthenticationPrincipal User user) {
+        String email = user.getUsername(); // obtém o e-mail do token JWT
+        List<TransferModel> response = transferService.findTransfersByUserEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

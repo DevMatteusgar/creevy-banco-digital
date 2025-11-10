@@ -13,7 +13,7 @@
 
 .header {
   background: #fbdc59;
-  padding: 1.5rem;  /* Reduz o padding do header */
+  padding: 1.5rem;
   color: black;
   text-align: center;
 }
@@ -21,12 +21,12 @@
 .header h1 {
   font-size: 2rem;
   font-weight: bold;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
 }
 
 .header p {
   margin: 0;
-  color: rgb(9, 9, 9);
+  color: #111;
 }
 
 /* FILTROS */
@@ -145,17 +145,43 @@ tbody tr:hover {
 td {
   padding: 0.75rem 1rem;
   color: #334155;
+  vertical-align: middle;
 }
 
-td.conta {
-  font-family: 'Courier New', monospace;
-  color: #64748b;
+td.operacao {
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
+/* VALORES E SETAS */
 td.valor {
   text-align: right;
   font-weight: 600;
+  position: relative;
+  padding-right: 2rem;
+  font-size: 1rem;
+}
+
+td.valor.positivo {
   color: #16a34a;
+}
+
+td.valor.negativo {
+  color: #dc2626;
+}
+
+.seta {
+  font-size: 1rem;
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+.seta.verde {
+  color: #16a34a;
+}
+
+.seta.vermelha {
+  color: #dc2626;
 }
 
 td.empty {
@@ -175,16 +201,8 @@ td.empty {
   color: #64748b;
 }
 
-.footer p {
-  margin: 0;
-}
-
 .footer strong {
   color: #0f172a;
-}
-
-.footer .total {
-  font-size: 1.125rem;
 }
 
 .footer .total strong {
