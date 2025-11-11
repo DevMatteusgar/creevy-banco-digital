@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserBalanceResponse} from '../../interfaces/UserBalanceResponse';
+import {BalanceHistory} from '../../interfaces/BalanceHistory';
 
 @Injectable({
   providedIn: 'root',
@@ -23,4 +24,25 @@ export class BalanceService {
     return this.http.get<UserBalanceResponse>(`${this.userBalanceApiUrl}/myBalance`, { headers });
   }
 
+  getBalanceHistory(): Observable<BalanceHistory[]> {
+    const token = localStorage.getItem('token'); // ou sessionStorage
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<BalanceHistory[]>(`${this.userBalanceApiUrl}/myBalanceHistory`, { headers });
+  }
+
+  getBalanceHistoryByTransfer(): Observable<BalanceHistory[]> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<BalanceHistory[]>(`${this.userBalanceApiUrl}/myBalanceHistoryByTransfer`, { headers });
+  }
 }

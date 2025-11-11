@@ -51,3 +51,61 @@ h1 {
   font-size: 1rem;
   color: #555;
 }
+
+
+
+/* Sessão geral dos gráficos */
+.charts-session {
+  padding: 2rem;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 500px;
+}
+
+/* Linha com os dois gráficos */
+.balanceHistoryChartLine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 2rem;
+  width: 100%;
+  margin-left: 5rem; /* empurra levemente da borda esquerda */
+  margin-right: 2rem;
+  max-width: 1500px;
+}
+
+/* Cada gráfico ocupa cerca de metade da largura */
+.balanceHistoryChartLine > * {
+  flex: 1 1 46%;
+  min-width: 450px;
+  max-width: 650px;
+  display: flex;
+}
+
+/* Ambos os componentes preenchem o espaço */
+app-balance-history-chart-dashboard,
+app-balance-history-by-transfer-chart-dashboard {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .balanceHistoryChartLine {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .balanceHistoryChartLine > * {
+    width: 90%;
+    max-width: none;
+  }
+}
+
+

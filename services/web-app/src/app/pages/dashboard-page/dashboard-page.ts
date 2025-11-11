@@ -4,6 +4,12 @@ import {CommonModule} from '@angular/common';
 import {BalanceDashboard} from '../../dashboards/balance-dashboard/balance-dashboard';
 import {LastTransfersDashboard} from '../../dashboards/last-transfers-dashboard/last-transfers-dashboard';
 import {LastTransfersTable} from '../../tables/last-transfers-table/last-transfers-table';
+import {
+  BalanceHistoryChartDashboard
+} from '../../dashboards/balance-history-chart-dashboard/balance-history-chart-dashboard';
+import {
+  BalanceHistoryByTransferChartDashboard
+} from '../../dashboards/balance-history-by-transfer-chart-dashboard/balance-history-by-transfer-chart-dashboard';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -13,6 +19,8 @@ import {LastTransfersTable} from '../../tables/last-transfers-table/last-transfe
     CommonModule,
     BalanceDashboard,
     LastTransfersDashboard,
+    BalanceHistoryChartDashboard,
+    BalanceHistoryByTransferChartDashboard
   ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
