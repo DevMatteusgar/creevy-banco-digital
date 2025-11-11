@@ -72,7 +72,7 @@ h1 {
   align-items: stretch;
   gap: 2rem;
   width: 100%;
-  margin-left: 5rem; /* empurra levemente da borda esquerda */
+  margin-left: 10rem; /* empurra levemente da borda esquerda */
   margin-right: 2rem;
   max-width: 1500px;
 }
