@@ -65,13 +65,43 @@ export class LoginForm implements OnInit {
         next: (response) => {
           this.submitted = true;
           console.log('Login realizado com sucesso');
-          //console.log('Token JWT:', response.token);
           this.router.navigate(['/home']);
         },
         error: (error) => {
           this.loading = false;
-          this.errorMessage = error.error?.message || 'CPF ou senha inválidos';
+
           console.error('Erro no login:', error);
+
+          // Primeiro tenta pegar a mensagem específica do backend
+          if (error.error && typeof error.error === 'object') {
+            // Tenta pegar error.error.error (como no seu caso: {error: 'Senha não confere'})
+            if (error.error.error) {
+              this.errorMessage = error.error.error;
+              return;
+            }
+            // Tenta pegar error.error.message
+            if (error.error.message) {
+              this.errorMessage = error.error.message;
+              return;
+            }
+          }
+
+          // Se não encontrou mensagem específica, usa mensagens por status HTTP
+          if (error.status === 401) {
+            this.errorMessage = 'CPF ou senha inválidos. Verifique seus dados e tente novamente.';
+          } else if (error.status === 403) {
+            this.errorMessage = 'Acesso negado. Sua conta pode estar bloqueada.';
+          } else if (error.status === 404) {
+            this.errorMessage = 'Usuário não encontrado. Verifique seu CPF.';
+          } else if (error.status === 409) {
+            this.errorMessage = 'Conflito nos dados. Verifique suas credenciais.';
+          } else if (error.status === 500) {
+            this.errorMessage = 'Erro no servidor. Tente novamente mais tarde.';
+          } else if (error.status === 0) {
+            this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+          } else {
+            this.errorMessage = 'Erro ao realizar login. Tente novamente.';
+          }
         },
         complete: () => {
           this.loading = false;
