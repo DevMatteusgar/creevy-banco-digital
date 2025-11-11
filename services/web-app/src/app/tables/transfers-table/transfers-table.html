@@ -20,6 +20,16 @@
 
       <div class="filtros-horizontal">
         <div class="filtro-grupo">
+          <label for="operationType">Tipo de Operação:</label>
+          <select id="operationType" [(ngModel)]="filtros.operationType" (ngModelChange)="aplicarFiltros()">
+            <option value="">Todas</option>
+            <option value="Deposit">Depósito</option>
+            <option value="TransferSend">Transferência enviada</option>
+            <option value="TransferReceive">Transferência recebida</option>
+          </select>
+        </div>
+
+        <div class="filtro-grupo">
           <label for="dataMin">Data Mínima:</label>
           <input type="date" id="dataMin" [(ngModel)]="filtros.dataMin" (ngModelChange)="aplicarFiltros()" />
         </div>

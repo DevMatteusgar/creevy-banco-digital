@@ -76,15 +76,22 @@
   color: #334155;
 }
 
-.filtro-grupo input {
+.filtro-grupo input,
+.filtro-grupo select {
   padding: 0.5rem 0.75rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 0.875rem;
   transition: border-color 0.2s;
+  background-color: white;
+}
+
+.filtro-grupo select {
+  cursor: pointer;
 }
 
 .filtro-grupo input:focus,
+.filtro-grupo select:focus,
 .filtro-destinatario input:focus {
   outline: none;
   border-color: #2563eb;

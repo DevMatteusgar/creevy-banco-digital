@@ -4,4 +4,5 @@ export interface TransfersTableFilters {
   dataMax: string;
   valorMin: number | null;
   valorMax: number | null;
+  operationType: string;
 }

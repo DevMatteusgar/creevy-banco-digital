@@ -15,18 +15,87 @@
   background: #fbdc59;
   padding: 1.5rem;
   color: black;
-  text-align: center;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-text {
+  text-align: left;
 }
 
 .header h1 {
   font-size: 2rem;
   font-weight: bold;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .header p {
   margin: 0;
   color: #111;
+}
+
+/* BOTÃO RECARREGAR */
+.btn-recarregar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #334155;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-recarregar:hover:not(:disabled) {
+  background-color: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-recarregar:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.icone-recarregar {
+  font-size: 1.25rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.icone-recarregar.girando {
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* MENSAGEM DE ERRO */
+.mensagem-erro {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
 }
 
 .content {
@@ -148,16 +217,35 @@ td.empty {
   .container {
     padding: 1rem;
   }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-text {
+    text-align: center;
+    width: 100%;
+  }
+
+  .btn-recarregar {
+    width: 100%;
+    justify-content: center;
+  }
+
   .header h1 {
     font-size: 1.5rem;
   }
+
   .content {
     padding: 1rem;
     overflow-x: auto;
   }
+
   table {
     min-width: 600px;
   }
+
   .footer {
     flex-direction: column;
     align-items: flex-start;

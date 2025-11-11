@@ -1,11 +1,29 @@
 <div class="container fade-in">
   <div class="card">
     <div class="header">
-      <h1>Registro de Transações</h1>
-      <p>Últimas 5 transações</p>
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Registro de Transações</h1>
+          <p>Últimas 5 transações</p>
+        </div>
+        <button
+          class="btn-recarregar"
+          (click)="recarregarTabela()"
+          [disabled]="carregando"
+          [class.carregando]="carregando"
+        >
+          <span class="icone-recarregar" [class.girando]="carregando">↻</span>
+          {{ carregando ? 'Carregando...' : 'Recarregar' }}
+        </button>
+      </div>
     </div>
 
     <div class="content">
+      <!-- Mensagem de erro -->
+      <div *ngIf="erro" class="mensagem-erro">
+        {{ erro }}
+      </div>
+
       <table>
         <thead>
         <tr>
@@ -63,8 +81,12 @@
           </td>
         </tr>
 
-        <tr *ngIf="transacoesLimitadas.length === 0">
+        <tr *ngIf="transacoesLimitadas.length === 0 && !carregando">
           <td colspan="6" class="empty">Nenhuma transação disponível</td>
+        </tr>
+
+        <tr *ngIf="carregando">
+          <td colspan="6" class="empty">Carregando transações...</td>
         </tr>
         </tbody>
       </table>

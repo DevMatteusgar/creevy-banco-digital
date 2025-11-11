@@ -21,7 +21,8 @@ export class TransfersTable implements OnInit {
     dataMin: '',
     dataMax: '',
     valorMin: null,
-    valorMax: null
+    valorMax: null,
+    operationType: ''
   };
 
   constructor(private transfersService: TransfersService) {}
@@ -33,7 +34,7 @@ export class TransfersTable implements OnInit {
   carregarTransferencias(): void {
     this.transfersService.getMyTransfers().subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados[0]); // DEBUG: veja o formato da data
+        console.log('Dados recebidos:', dados[0]);
 
         // Ordena do mais recente para o mais antigo
         this.transacoes = dados.sort((a, b) =>
@@ -52,6 +53,11 @@ export class TransfersTable implements OnInit {
       // Filtro por destinatário
       if (this.filtros.destinatario &&
         !transacao.receiverName?.toLowerCase().includes(this.filtros.destinatario.toLowerCase())) {
+        return false;
+      }
+
+      // Filtro por tipo de operação
+      if (this.filtros.operationType && transacao.operationType !== this.filtros.operationType) {
         return false;
       }
 
@@ -95,7 +101,8 @@ export class TransfersTable implements OnInit {
       dataMin: '',
       dataMax: '',
       valorMin: null,
-      valorMax: null
+      valorMax: null,
+      operationType: ''
     };
     this.aplicarFiltros();
   }

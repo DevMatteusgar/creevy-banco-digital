@@ -45,6 +45,10 @@ export class LastTransfersTable implements OnInit {
     });
   }
 
+  recarregarTabela(): void {
+    this.carregarTransacoes();
+  }
+
   // Limita às últimas 5 transações
   get transacoesLimitadas(): TransferModel[] {
     return this.transfers.slice(0, 5);
