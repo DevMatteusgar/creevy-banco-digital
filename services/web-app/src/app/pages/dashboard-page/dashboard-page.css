@@ -59,8 +59,8 @@ h1 {
   padding: 2rem;
   background: #f8f9fa;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-direction: column; /* 🔹 empilha o título e os gráficos verticalmente */
+  align-items: flex-start; /* 🔹 alinha tudo à esquerda */
   min-height: 500px;
 }
 
@@ -107,5 +107,6 @@ app-balance-history-by-transfer-chart-dashboard {
     max-width: none;
   }
 }
+
 
 

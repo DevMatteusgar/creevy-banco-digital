@@ -226,3 +226,71 @@
     min-width: 200px;
   }
 }
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.profile-icon {
+  width: 28px;
+  height: 28px;
+  color: #4CAF50;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-name.loading {
+  opacity: 0.6;
+  font-style: italic;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .navbar-right {
+    gap: 0.75rem;
+  }
+
+  .user-profile {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .user-name {
+    max-width: 100px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-name {
+    display: none;
+  }
+
+  .user-profile {
+    padding: 0.5rem;
+  }
+}

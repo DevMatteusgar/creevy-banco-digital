@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {UserService} from '../../services/user-service/user-service';
 
 @Component({
   selector: 'app-navbar-layout',
@@ -12,11 +13,50 @@ import {RouterLink} from '@angular/router';
   templateUrl: './navbar-layout.html',
   styleUrl: './navbar-layout.css',
 })
-export class NavbarLayout {
+export class NavbarLayout implements OnInit {
 
   isMenuOpen = false;
   isTransfersOpen = false;
   isInvestOpen = false;
+  userName: string = '';
+  isLoadingUser: boolean = true;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.loadUserInfo();
+  }
+
+  loadUserInfo() {
+    this.userService.getMyInfo().subscribe({
+      next: (response) => {
+        this.userName = this.parseUserName(response.accountName);
+        this.isLoadingUser = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar informações do usuário:', error);
+        this.userName = 'Usuário';
+        this.isLoadingUser = false;
+      }
+    });
+  }
+
+  parseUserName(fullName: string): string {
+    if (!fullName || fullName.trim() === '') {
+      return 'Usuário';
+    }
+
+    const nameParts = fullName.trim().split(/\s+/);
+
+    if (nameParts.length === 1) {
+      return nameParts[0];
+    }
+
+    const firstName = nameParts[0];
+    const lastName = nameParts[nameParts.length - 1];
+
+    return `${firstName} ${lastName}`;
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

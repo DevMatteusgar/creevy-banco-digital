@@ -30,6 +30,15 @@ export class BalanceHistoryByTransferChartDashboard implements OnInit {
           padding: 20,
         },
       },
+      title: {
+        display: true,
+        text: 'Evolução Patrimonial Por Transação',
+        font: {
+          size: 18,
+          weight: 'bold'
+        },
+        padding: { top: 10, bottom: 30 }
+      },
     },
     layout: {
       padding: 10,
