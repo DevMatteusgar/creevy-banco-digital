@@ -1,35 +1,40 @@
 <app-navbar-layout></app-navbar-layout>
+
 <div class="dashboard-container">
   <div class="button-group">
     <button
       class="tab-button"
       (click)="setActiveTab('my-balance')">
-          <span [class.active]="activeTab === 'my-balance'">
-            Saldo
-          </span>
+      <span [class.active]="activeTab === 'my-balance'">
+        Saldo
+      </span>
     </button>
 
     <button
       class="tab-button"
       (click)="setActiveTab('my-transfers')">
-          <span [class.active]="activeTab === 'my-transfers'">
-            Transferências
-          </span>
+      <span [class.active]="activeTab === 'my-transfers'">
+        Transferências
+      </span>
     </button>
   </div>
 
   <div class="content">
-    <p *ngIf="activeTab === 'my-balance'">
+    <!-- ABA SALDO -->
+    <div *ngIf="activeTab === 'my-balance'">
       <app-balance-dashboard></app-balance-dashboard>
-    </p>
-    <p *ngIf="activeTab === 'my-transfers'">
+
+      <div class="charts-session">
+        <div class="balanceHistoryChartLine">
+          <app-balance-history-chart-dashboard></app-balance-history-chart-dashboard>
+          <app-balance-history-by-transfer-chart-dashboard></app-balance-history-by-transfer-chart-dashboard>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA TRANSFERÊNCIAS -->
+    <div *ngIf="activeTab === 'my-transfers'">
       <app-last-transfers-dashboard></app-last-transfers-dashboard>
-    </p>
-  </div>
-</div>
-<div class="charts-session">
-  <div class="balanceHistoryChartLine">
-    <app-balance-history-chart-dashboard></app-balance-history-chart-dashboard>
-    <app-balance-history-by-transfer-chart-dashboard></app-balance-history-by-transfer-chart-dashboard>
+    </div>
   </div>
 </div>

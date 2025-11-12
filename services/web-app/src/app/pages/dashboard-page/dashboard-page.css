@@ -75,11 +75,16 @@ h1 {
 }
 
 /* Cada gráfico ocupa cerca de metade da largura */
-.balanceHistoryChartLine > * {
-  flex: 1 1 46%;
-  min-width: 380px; /* reduzido de 450px */
-  max-width: 550px; /* reduzido de 650px */
+.balanceHistoryChartLine {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 1.5rem;
+  width: 100%;
+  margin-left: -8rem; /* alinhado com o conteúdo principal */
+  margin-right: 0rem;
+  max-width: 1200px;
 }
 
 /* Ambos os componentes preenchem o espaço */
