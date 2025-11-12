@@ -1,26 +1,25 @@
 .dashboard-container {
-  padding: 2rem;
+  padding: 1.5rem; /* reduzido de 2rem */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 h1 {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* reduzido de 2rem */
   color: #333;
-
 }
 
 .button-group {
   display: flex;
-  gap: 2.5rem;
-  margin-bottom: 2rem;
+  gap: 2rem; /* reduzido de 2.5rem */
+  margin-bottom: 1.5rem; /* reduzido de 2rem */
   margin-left: 13rem;
 }
 
 .tab-button {
   background: none;
   border: none;
-  padding: 0.75rem 0;
-  font-size: 1.75rem;
+  padding: 0.5rem 0; /* reduzido de 0.75rem 0 */
+  font-size: 1.375rem; /* reduzido de 1.75rem */
   font-family: 'Poppins', 'Quicksand', 'Nunito', 'Rounded Mplus 1c', sans-serif;
   font-weight: 500;
   color: #666;
@@ -47,21 +46,19 @@ h1 {
 
 .content {
   margin-left: 13rem;
-  padding: 1rem 0;
-  font-size: 1rem;
+  padding: 0.5rem 0; /* reduzido de 1rem 0 */
+  font-size: 0.875rem; /* reduzido de 1rem */
   color: #555;
 }
 
-
-
 /* Sessão geral dos gráficos */
 .charts-session {
-  padding: 2rem;
+  padding: 1.5rem; /* reduzido de 2rem */
   background: #f8f9fa;
   display: flex;
-  flex-direction: column; /* 🔹 empilha o título e os gráficos verticalmente */
-  align-items: flex-start; /* 🔹 alinha tudo à esquerda */
-  min-height: 500px;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 400px; /* reduzido de 500px */
 }
 
 /* Linha com os dois gráficos */
@@ -70,18 +67,18 @@ h1 {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: stretch;
-  gap: 2rem;
+  gap: 1.5rem; /* reduzido de 2rem */
   width: 100%;
-  margin-left: 10rem; /* empurra levemente da borda esquerda */
+  margin-left: 10rem;
   margin-right: 2rem;
-  max-width: 1500px;
+  max-width: 1200px; /* reduzido de 1500px */
 }
 
 /* Cada gráfico ocupa cerca de metade da largura */
 .balanceHistoryChartLine > * {
   flex: 1 1 46%;
-  min-width: 450px;
-  max-width: 650px;
+  min-width: 380px; /* reduzido de 450px */
+  max-width: 550px; /* reduzido de 650px */
   display: flex;
 }
 
@@ -107,6 +104,3 @@ app-balance-history-by-transfer-chart-dashboard {
     max-width: none;
   }
 }
-
-
-

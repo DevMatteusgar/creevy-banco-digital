@@ -1,11 +1,11 @@
 .chart-container {
   position: relative;
   width: 100%;
-  height: 450px; /* ligeiramente maior */
+  height: 280px; /* reduzido de 450px */
   background-color: #fff;
-  border-radius: 16px;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px; /* reduzido de 16px */
+  padding: 0.75rem 1rem; /* reduzido de 1rem 1.5rem */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* sombra mais suave */
   transition: box-shadow 0.3s ease;
   display: flex;
   justify-content: center;
@@ -21,12 +21,12 @@
 
 /* Hover */
 .chart-container:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsivo */
 @media (max-width: 768px) {
   .chart-container {
-    height: 360px;
+    height: 240px;
   }
 }
