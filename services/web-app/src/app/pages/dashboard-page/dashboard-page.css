@@ -1,25 +1,25 @@
 .dashboard-container {
-  padding: 1.5rem; /* reduzido de 2rem */
+  padding: 1.5rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 h1 {
-  margin-bottom: 1.5rem; /* reduzido de 2rem */
+  margin-bottom: 1.5rem;
   color: #333;
 }
 
 .button-group {
   display: flex;
-  gap: 2rem; /* reduzido de 2.5rem */
-  margin-bottom: 1.5rem; /* reduzido de 2rem */
+  gap: 2rem;
+  margin-bottom: 1.5rem;
   margin-left: 13rem;
 }
 
 .tab-button {
   background: none;
   border: none;
-  padding: 0.5rem 0; /* reduzido de 0.75rem 0 */
-  font-size: 1.375rem; /* reduzido de 1.75rem */
+  padding: 0.5rem 0;
+  font-size: 1.375rem;
   font-family: 'Poppins', 'Quicksand', 'Nunito', 'Rounded Mplus 1c', sans-serif;
   font-weight: 500;
   color: #666;
@@ -46,66 +46,76 @@ h1 {
 
 .content {
   margin-left: 13rem;
-  padding: 0.5rem 0; /* reduzido de 1rem 0 */
-  font-size: 0.875rem; /* reduzido de 1rem */
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
   color: #555;
 }
 
 /* Sessão geral dos gráficos */
 .charts-session {
-  padding: 1.5rem; /* reduzido de 2rem */
+  padding: 1.5rem;
   background: #f8f9fa;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 400px; /* reduzido de 500px */
+  border-radius: 12px;
 }
 
-/* Linha com os dois gráficos */
+/* NOVO: Layout flexbox para gráficos à esquerda e grid à direita */
 .balanceHistoryChartLine {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
-  gap: 1.5rem; /* reduzido de 2rem */
-  width: 100%;
-  margin-left: 10rem;
-  margin-right: 2rem;
-  max-width: 1200px; /* reduzido de 1500px */
-}
-
-/* Cada gráfico ocupa cerca de metade da largura */
-.balanceHistoryChartLine {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
   gap: 1.5rem;
   width: 100%;
-  margin-left: -8rem; /* alinhado com o conteúdo principal */
-  margin-right: 0rem;
-  max-width: 1200px;
+  margin-left: -8rem;
+  align-items: flex-start;
 }
 
-/* Ambos os componentes preenchem o espaço */
+/* Área dos gráficos - ocupa o espaço disponível */
+.charts-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+/* Componentes dos gráficos dentro da área */
 app-balance-history-chart-dashboard,
 app-balance-history-by-transfer-chart-dashboard {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: stretch;
+  display: block;
+  width: 100%;
+}
+
+/* Grid de ações - largura fixa à direita */
+app-stock-market-grid-table {
+  width: 280px;
+  flex-shrink: 0;
+  display: block;
+  margin-left: 10rem;
+  margin-top: -15rem; /* ADICIONE ESTA LINHA */
 }
 
 /* Responsividade */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .balanceHistoryChartLine {
     flex-direction: column;
-    align-items: center;
     margin-left: 0;
   }
 
-  .balanceHistoryChartLine > * {
-    width: 90%;
-    max-width: none;
+  app-stock-market-grid-table {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 900px) {
+  .content {
+    margin-left: 0;
+  }
+
+  .button-group {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .balanceHistoryChartLine {
+    align-items: center;
   }
 }

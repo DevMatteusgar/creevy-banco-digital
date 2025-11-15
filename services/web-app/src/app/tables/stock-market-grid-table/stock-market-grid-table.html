@@ -1,0 +1,44 @@
+<!-- stock-market-grid.component.html -->
+<div class="stock-container">
+  <div class="header">
+    <h2>Cotações</h2>
+    <button class="refresh-btn" (click)="loadStocks()" [disabled]="loading">
+      <span class="icon">↻</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="stocks-grid">
+    <div *ngFor="let stock of stocks" class="stock-card">
+      <div class="stock-header">
+        <img [src]="stock.logoUrl"
+             [alt]="stock.stockName"
+             class="stock-logo"
+             (error)="onImageError($event)">
+        <div class="stock-info">
+          <span class="stock-ticker">{{ stock.stockIdentifier }}</span>
+          <span class="stock-name">{{ stock.stockName }}</span>
+        </div>
+      </div>
+
+      <div class="stock-price">
+        {{ formatPrice(stock.price, stock.currency) }}
+      </div>
+
+      <div class="stock-details">
+        <div class="detail-item">
+          <span class="label">Cap.</span>
+          <span class="value">{{ formatMarketCap(stock.marketCap) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

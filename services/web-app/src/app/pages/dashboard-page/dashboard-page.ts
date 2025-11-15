@@ -10,6 +10,7 @@ import {
 import {
   BalanceHistoryByTransferChartDashboard
 } from '../../dashboards/balance-history-by-transfer-chart-dashboard/balance-history-by-transfer-chart-dashboard';
+import {StockMarketGridTable} from '../../tables/stock-market-grid-table/stock-market-grid-table';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -20,7 +21,8 @@ import {
     BalanceDashboard,
     LastTransfersDashboard,
     BalanceHistoryChartDashboard,
-    BalanceHistoryByTransferChartDashboard
+    BalanceHistoryByTransferChartDashboard,
+    StockMarketGridTable
   ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',

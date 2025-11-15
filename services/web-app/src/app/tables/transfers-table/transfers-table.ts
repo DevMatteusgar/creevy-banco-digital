@@ -107,10 +107,21 @@ export class TransfersTable implements OnInit {
     this.aplicarFiltros();
   }
 
+  /** TOTAL correto considerando entradas/saídas */
   get valorTotal(): number {
-    return this.transacoesFiltradas.reduce((sum, t) => sum + t.amount, 0);
+    return this.transacoesFiltradas.reduce((sum, t) => {
+      // NEGATIVAS (saídas)
+      if (t.operationType === 'TransferSend' ||
+        t.operationType === 'SavingsToInvestments') {
+        return sum - t.amount;
+      }
+
+      // POSITIVAS (entradas)
+      return sum + t.amount;
+    }, 0);
   }
 
+  /** Formata para R$ */
   formatarValor(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -129,14 +140,11 @@ export class TransfersTable implements OnInit {
     }
 
     // Se não tiver timezone, assume que é horário local (não UTC)
-    // Adiciona 'T' se não tiver e força interpretação local
     const dataComT = dataString.includes('T') ? dataString : dataString.replace(' ', 'T');
     return new Date(dataComT + '-03:00'); // Força timezone de Brasília
   }
 
-  /**
-   * Formata data para exibição
-   */
+  /** Formata data */
   formatarData(data: string): string {
     const dataObj = this.converterParaDate(data);
 
@@ -146,12 +154,18 @@ export class TransfersTable implements OnInit {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'America/Sao_Paulo' // Garante que exibe no horário de Brasília
+      timeZone: 'America/Sao_Paulo'
     });
   }
 
-  /** Define se a transação é positiva (Depósito) ou negativa (TransferSend) */
+  /**
+   * Verifica se transação é POSITIVA
+   */
   isPositiva(transacao: TransferModel): boolean {
-    return transacao.operationType === 'Deposit';
+    return (
+      transacao.operationType === 'Deposit' ||
+      transacao.operationType === 'TransferReceive' ||
+      transacao.operationType === 'InvestmentsToSavings'
+    );
   }
 }

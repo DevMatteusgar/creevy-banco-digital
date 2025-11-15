@@ -1,5 +1,6 @@
 package app.back_end.auth.model;
 
+import app.back_end.investments.model.StocksModel;
 import app.back_end.transfer.model.TransferModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -44,11 +45,15 @@ public class UserModel {
     @Column(name = "investments_balance")
     private Double investmentsBalance = 0.0;
 
-    //Referencias transações por usuário (1 para muitos)
+    //Referencia transações por usuário (1 para muitos)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Indica o lado "gerenciador" da relação
     private List<TransferModel> transactions = new ArrayList<>();
 
+    //Referencia ações por usuário (1:N)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<StocksModel> stocks = new ArrayList<>();
 
     //Pre persist
     @PrePersist
