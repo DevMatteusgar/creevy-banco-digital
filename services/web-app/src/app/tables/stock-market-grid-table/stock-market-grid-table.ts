@@ -21,6 +21,15 @@ export class StockMarketGridTable implements OnInit {
     this.loadStocks();
   }
 
+  getLogoUrl(stock: StockMarketInfo): string {
+    // Se não tiver logo, retorna um SVG com a primeira letra do ticker
+    if (!stock.logoUrl || stock.logoUrl.trim() === '') {
+      const letter = stock.stockIdentifier.charAt(0);
+      return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3E%3Crect width="40" height="40" fill="%234CAF50"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="white" font-weight="bold"%3E${letter}%3C/text%3E%3C/svg%3E`;
+    }
+    return stock.logoUrl;
+  }
+
   loadStocks(): void {
     this.loading = true;
     this.error = null;
@@ -66,7 +75,8 @@ export class StockMarketGridTable implements OnInit {
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
     if (target) {
-      target.src = 'assets/default-stock-logo.png';
+      // Fallback para um ícone de placeholder simples
+      target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3E%3Crect width="40" height="40" fill="%234CAF50"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="white" font-weight="bold"%3E$%3C/text%3E%3C/svg%3E';
     }
   }
 

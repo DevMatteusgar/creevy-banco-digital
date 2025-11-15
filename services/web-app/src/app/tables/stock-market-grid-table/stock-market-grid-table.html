@@ -19,7 +19,7 @@
   <div *ngIf="!loading && !error" class="stocks-grid">
     <div *ngFor="let stock of stocks" class="stock-card">
       <div class="stock-header">
-        <img [src]="stock.logoUrl"
+        <img [src]="getLogoUrl(stock)"
              [alt]="stock.stockName"
              class="stock-logo"
              (error)="onImageError($event)">
