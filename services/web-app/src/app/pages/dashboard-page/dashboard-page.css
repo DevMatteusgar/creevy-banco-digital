@@ -88,8 +88,8 @@ app-stock-market-grid-table {
   width: 280px;
   flex-shrink: 0;
   display: block;
-  margin-left: 10rem;
-  margin-top: -15rem; /* ADICIONE ESTA LINHA */
+  margin-left: 12rem;
+  margin-top: -15rem;
 }
 
 /* Responsividade */
