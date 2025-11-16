@@ -1,33 +1,59 @@
 package app.back_end.investments.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
+
 public class StocksTransferDtoResponse {
+
+    private Long transferId;
 
     private String stockName;
     private String stockIdentifier;
+
     private Integer stockQuantity;
     private Double stockPrice;
-    private Double balanceAfterOperation;
-    private String operationType;
+
     private Double transactionTotalPrice;
+    private Double balanceAfterOperation;
 
-    public StocksTransferDtoResponse(String stockName,
-                                     String stockIdentifier,
-                                     Integer stockQuantity,
-                                     Double stockPrice,
-                                     Double balanceAfterOperation,
-                                     String operationType,
-                                     Double transactionTotalPrice) {
+    private String operationType;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Sao_Paulo")
+    private LocalDateTime creationDate;
+
+    // Construtor completo
+    public StocksTransferDtoResponse(
+            Long transferId,
+            String stockName,
+            String stockIdentifier,
+            Integer stockQuantity,
+            Double stockPrice,
+            Double transactionTotalPrice,
+            Double balanceAfterOperation,
+            String operationType,
+            LocalDateTime creationDate
+    ) {
+        this.transferId = transferId;
         this.stockName = stockName;
         this.stockIdentifier = stockIdentifier;
         this.stockQuantity = stockQuantity;
         this.stockPrice = stockPrice;
+        this.transactionTotalPrice = transactionTotalPrice;
         this.balanceAfterOperation = balanceAfterOperation;
         this.operationType = operationType;
-        this.transactionTotalPrice = transactionTotalPrice;
+        this.creationDate = creationDate;
     }
 
     // Getters e setters
+    public Long getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(Long transferId) {
+        this.transferId = transferId;
+    }
+
     public String getStockName() {
         return stockName;
     }
@@ -60,6 +86,14 @@ public class StocksTransferDtoResponse {
         this.stockPrice = stockPrice;
     }
 
+    public Double getTransactionTotalPrice() {
+        return transactionTotalPrice;
+    }
+
+    public void setTransactionTotalPrice(Double transactionTotalPrice) {
+        this.transactionTotalPrice = transactionTotalPrice;
+    }
+
     public Double getBalanceAfterOperation() {
         return balanceAfterOperation;
     }
@@ -76,11 +110,11 @@ public class StocksTransferDtoResponse {
         this.operationType = operationType;
     }
 
-    public Double getTransactionTotalPrice() {
-        return transactionTotalPrice;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
-    public void setTransactionTotalPrice(Double transactionTotalPrice) {
-        this.transactionTotalPrice = transactionTotalPrice;
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }

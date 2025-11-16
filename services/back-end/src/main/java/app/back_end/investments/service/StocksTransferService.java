@@ -54,13 +54,15 @@ public class StocksTransferService {
         stocksTransfersRepository.save(transfer);
 
         return new StocksTransferDtoResponse(
+                transfer.getTransferId(),
                 stock.getStockName(),
                 stock.getStockIdentifier(),
                 stockQuantity,
                 stockPrice,
+                transactionTotalPrice,
                 balanceAfterOperation,
                 operationType,
-                transactionTotalPrice
+                transfer.getCreationDate()
         );
     }
 
@@ -76,13 +78,15 @@ public class StocksTransferService {
 
         return transfers.stream()
                 .map(t -> new StocksTransferDtoResponse(
+                        t.getTransferId(),
                         t.getStock().getStockName(),
                         t.getStock().getStockIdentifier(),
                         t.getStockQuantity(),
                         t.getStockPrice(),
+                        t.getTransactionTotalPrice(),
                         t.getBalanceAfterOperation(),
                         t.getOperationType(),
-                        t.getTransactionTotalPrice()
+                        t.getCreationDate()
                 ))
                 .toList();
     }

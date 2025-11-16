@@ -6,6 +6,7 @@ import app.back_end.auth.repository.UserRepository;
 import app.back_end.investments.dto.response.StockMarketInfoDto;
 import app.back_end.investments.dto.response.StocksSummaryDto;
 import app.back_end.investments.dto.response.StocksTransferDtoResponse;
+import app.back_end.investments.exceptions.InsuficientInvestmentsFundsException;
 import app.back_end.investments.financialApi.brapiDev.BrapiQuoteResponse;
 import app.back_end.investments.financialApi.brapiDev.BrapiService;
 import app.back_end.investments.model.StocksModel;
@@ -129,7 +130,7 @@ public class StocksService {
     private void validateBalance(UserModel user, Double amount) {
         if (user.getInvestmentsBalance() == null ||
                 user.getInvestmentsBalance() < amount) {
-            throw new IllegalArgumentException("Saldo insuficiente.");
+            throw new InsuficientInvestmentsFundsException("Saldo insuficiente.");
         }
     }
 

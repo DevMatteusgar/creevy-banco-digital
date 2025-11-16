@@ -1,0 +1,145 @@
+<div class="stock-purchase-container">
+  <!-- Notificações Fixas no Topo -->
+  <div class="notifications-area">
+    <div *ngIf="error" class="notification error-notification">
+      <span class="notification-icon">⚠️</span>
+      <span class="notification-message">{{ error }}</span>
+      <button class="notification-close" (click)="error = null">✕</button>
+    </div>
+
+    <div *ngIf="successMessage" class="notification success-notification">
+      <span class="notification-icon">✓</span>
+      <span class="notification-message">{{ successMessage }}</span>
+      <button class="notification-close" (click)="successMessage = null">✕</button>
+    </div>
+  </div>
+
+  <h2 class="title">Comprar Ações</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando ações...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading" class="content-wrapper">
+
+    <!-- Quadro Expositivo da Ação Selecionada -->
+    <div class="stock-showcase" *ngIf="selectedStock">
+      <div class="showcase-header">
+        <img [src]="getLogoUrl(selectedStock)"
+             [alt]="selectedStock.stockName"
+             class="showcase-logo"
+             (error)="onImageError($event)">
+        <div class="showcase-info">
+          <h3 class="showcase-ticker">{{ selectedStock.stockIdentifier }}</h3>
+          <p class="showcase-name">{{ selectedStock.stockName }}</p>
+        </div>
+      </div>
+
+      <div class="showcase-details">
+        <div class="detail-row">
+          <span class="detail-label">Preço Atual</span>
+          <span class="detail-value price">{{ formatPrice(selectedStock.price, selectedStock.currency) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Valor de Mercado</span>
+          <span class="detail-value">{{ formatMarketCap(selectedStock.marketCap) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Moeda</span>
+          <span class="detail-value">{{ selectedStock.currency }}</span>
+        </div>
+      </div>
+
+      <!-- Área de Compra -->
+      <div class="purchase-area">
+        <div class="quantity-input">
+          <label for="quantity">Quantidade:</label>
+          <input
+            type="number"
+            id="quantity"
+            [(ngModel)]="purchaseQuantity"
+            min="1"
+            max="10000"
+            class="input-field">
+        </div>
+
+        <div class="total-display">
+          <span class="total-label">Total:</span>
+          <span class="total-value">{{ formatPrice(getTotalPurchase(), selectedStock.currency) }}</span>
+        </div>
+
+        <button
+          class="buy-button"
+          (click)="buyStock()"
+          [disabled]="purchaseQuantity < 1 || purchasing">
+          <span *ngIf="!purchasing">🛒 Comprar Agora</span>
+          <span *ngIf="purchasing">⏳ Processando...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Ações Disponíveis -->
+    <div class="stocks-grid-section">
+      <h3 class="grid-title">Ações Disponíveis</h3>
+
+      <div class="stocks-table-wrapper">
+        <table class="stocks-table">
+          <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Ticker</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Market Cap</th>
+            <th>Ação</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+            *ngFor="let stock of stocks"
+            class="stock-row"
+            [class.selected]="selectedStock?.stockIdentifier === stock.stockIdentifier"
+            (click)="selectStock(stock)">
+
+            <td class="logo-cell">
+              <img [src]="getLogoUrl(stock)"
+                   [alt]="stock.stockName"
+                   class="table-logo"
+                   (error)="onImageError($event)">
+            </td>
+
+            <td class="ticker-cell">
+              <strong>{{ stock.stockIdentifier }}</strong>
+            </td>
+
+            <td class="name-cell">
+              {{ stock.stockName }}
+            </td>
+
+            <td class="price-cell">
+              <span class="price-value">{{ formatPrice(stock.price, stock.currency) }}</span>
+            </td>
+
+            <td class="marketcap-cell">
+              {{ formatMarketCap(stock.marketCap) }}
+            </td>
+
+            <td class="action-cell">
+              <button
+                class="table-select-button"
+                (click)="selectStock(stock); $event.stopPropagation()">
+                {{ selectedStock?.stockIdentifier === stock.stockIdentifier ? '✓ Selecionada' : 'Selecionar' }}
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,463 @@
+.stock-purchase-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+/* Área de Notificações no Topo */
+.notifications-area {
+  margin-bottom: 2rem;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.error-notification {
+  background: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #c62828;
+}
+
+.error-notification .notification-close {
+  color: #c62828;
+}
+
+.error-notification .notification-close:hover {
+  background: rgba(198, 40, 40, 0.1);
+}
+
+.success-notification {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #4CAF50;
+}
+
+.success-notification .notification-close {
+  color: #2e7d32;
+}
+
+.success-notification .notification-close:hover {
+  background: rgba(46, 125, 50, 0.1);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Loading & Error States */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+/* Content Layout */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Quadro Expositivo */
+.stock-showcase {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.showcase-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+.showcase-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: white;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.showcase-info {
+  flex: 1;
+}
+
+.showcase-ticker {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.showcase-name {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.showcase-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.detail-value.price {
+  font-size: 2rem;
+  color: #ffd700;
+}
+
+/* Purchase Area */
+.purchase-area {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quantity-input label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.input-field {
+  width: 100px;
+  padding: 0.75rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  text-align: center;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #ffd700;
+  background: rgba(255,255,255,0.3);
+}
+
+.total-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.total-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.total-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffd700;
+}
+
+.buy-button {
+  margin-left: auto;
+  padding: 1rem 2.5rem;
+  background: #ffd700;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.buy-button:hover:not(:disabled) {
+  background: #ffed4e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.buy-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.buy-button:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Grid de Ações - FORMATO TABELA */
+.stocks-grid-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.grid-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+}
+
+.stocks-table-wrapper {
+  overflow-x: auto;
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.stocks-table thead {
+  background: #f8f9fa;
+}
+
+.stocks-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.stocks-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stocks-table tbody tr:hover {
+  background: #f8fdf9;
+}
+
+.stocks-table tbody tr.selected {
+  background: #f1f8f4;
+  border-left: 4px solid #4CAF50;
+}
+
+.stocks-table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.logo-cell {
+  width: 60px;
+}
+
+.table-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.ticker-cell {
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.name-cell {
+  color: #666;
+  max-width: 250px;
+}
+
+.price-cell {
+  font-weight: 700;
+  color: #4CAF50;
+  font-size: 1.1rem;
+}
+
+.marketcap-cell {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.action-cell {
+  text-align: right;
+  width: 150px;
+}
+
+.table-select-button {
+  padding: 0.6rem 1.2rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.table-select-button:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.stock-row.selected .table-select-button {
+  background: #2e7d32;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .stock-purchase-container {
+    padding: 1rem;
+  }
+
+  .notification {
+    padding: 0.875rem 1rem;
+  }
+
+  .notification-icon {
+    font-size: 1.25rem;
+  }
+
+  .notification-message {
+    font-size: 0.875rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .showcase-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .showcase-ticker {
+    font-size: 1.5rem;
+  }
+
+  .purchase-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buy-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Tabela responsiva */
+  .stocks-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .stocks-table {
+    font-size: 0.85rem;
+  }
+
+  .stocks-table th,
+  .stocks-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .name-cell {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .table-select-button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
