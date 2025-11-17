@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BalanceService } from '../../services/balance-service/balance-service';
 import { CommonModule } from '@angular/common';
+import { UserBalanceResponse } from '../../interfaces/UserBalanceResponse';
 
 @Component({
   selector: 'app-stock-balance-transfer-form',
@@ -18,8 +19,12 @@ export class StockBalanceTransferForm implements OnInit {
   transferForm!: FormGroup;
 
   notification: { type: 'success' | 'error', message: string } | null = null;
+
   amountFormatted: string = '';
   isLoading: boolean = false;
+
+  savingsBalance: number = 0;
+  investmentsBalance: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -31,9 +36,28 @@ export class StockBalanceTransferForm implements OnInit {
       transferType: ['savingsToInvestments', Validators.required],
       amount: ['', [Validators.required, this.valuePositiveValidator]]
     });
+
+    this.loadBalances();
   }
 
-  // Validação de valor positivo
+  /** ============================
+   * Carregar saldos do usuário
+   * ============================ */
+  loadBalances() {
+    this.balanceService.getMyBalance().subscribe({
+      next: (data: UserBalanceResponse) => {
+        this.savingsBalance = data.savingsBalance;
+        this.investmentsBalance = data.investmentsBalance;
+      },
+      error: () => {
+        this.notification = {
+          type: 'error',
+          message: 'Erro ao carregar saldos.'
+        };
+      }
+    });
+  }
+
   valuePositiveValidator(control: any) {
     if (!control.value) return null;
 
@@ -44,7 +68,6 @@ export class StockBalanceTransferForm implements OnInit {
     return numeric > 0 ? null : { invalidValue: true };
   }
 
-  // Formatação BRL
   formatCurrency(event: any) {
     let raw = event.target.value.replace(/\D/g, '');
 
@@ -84,7 +107,7 @@ export class StockBalanceTransferForm implements OnInit {
     const type = this.transferForm.get('transferType')?.value;
     const amount = this.convertToNumber(this.transferForm.get('amount')?.value);
 
-    let request$ =
+    const request$ =
       type === 'savingsToInvestments'
         ? this.balanceService.transferSavingsToInvestments(amount)
         : this.balanceService.transferInvestmentsToSavings(amount);
@@ -100,16 +123,17 @@ export class StockBalanceTransferForm implements OnInit {
         this.transferForm.reset({ transferType: 'savingsToInvestments' });
         this.amountFormatted = '';
 
+        this.loadBalances();
+
         setTimeout(() => this.notification = null, 5000);
       },
       error: (err) => {
         this.notification = {
           type: 'error',
-          message: err.error?.message || 'Não foi possível realizar a transferência. Tente novamente.'
+          message: err.error?.message || 'Não foi possível realizar a transferência.'
         };
 
         this.isLoading = false;
-
         setTimeout(() => this.notification = null, 5000);
       }
     });
