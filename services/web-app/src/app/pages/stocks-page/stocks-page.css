@@ -1,0 +1,16 @@
+.dual-container {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dual-container > * {
+  flex: 1;
+}
+@media (max-width: 900px) {
+  .dual-container {
+    flex-direction: column;
+  }
+}

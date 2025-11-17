@@ -6,10 +6,11 @@
     <button class="notification-close" (click)="closeNotification()">✕</button>
   </div>
 
-  <h2 class="title">Transferência entre Saldo</h2>
+  <h2 class="title">Transferência entre Saldos</h2>
 
   <form [formGroup]="transferForm" (ngSubmit)="submitTransfer()" class="transfer-form">
 
+    <!-- Tipo -->
     <div class="form-row">
       <label>Tipo de Transferência</label>
 
@@ -19,6 +20,7 @@
       </select>
     </div>
 
+    <!-- Valor -->
     <div class="form-row">
       <label>Valor</label>
 
@@ -36,8 +38,8 @@
       </small>
     </div>
 
-    <button class="buy-button" type="submit" [disabled]="isLoading || transferForm.invalid">
-      {{ isLoading ? 'Processando...' : 'Transferir' }}
+    <button class="submit-button" type="submit" [disabled]="isLoading || transferForm.invalid">
+      <span>{{ isLoading ? 'Processando...' : 'Transferir' }}</span>
     </button>
 
   </form>

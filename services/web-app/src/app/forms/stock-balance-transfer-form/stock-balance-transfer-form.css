@@ -1,11 +1,19 @@
 .transfer-container {
-  max-width: 750px;
-  margin: 0 auto;
-  padding: 1.25rem;
-  background: #fafafa;
-  min-height: 100vh;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
+/* TÍTULO CENTRALIZADO */
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  color: #111827;
+  margin: 0 auto 1.5rem auto;
+}
+
+/* Form principal */
 .transfer-form {
   background: white;
   border: 1px solid #e5e7eb;
@@ -16,46 +24,70 @@
   gap: 1.25rem;
 }
 
+/* Linha do formulário */
 .form-row {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
+/* ÍCONES + INPUTS */
+.input-wrapper {
+  display: contents;
+}
+
+.icon {
+  display: none;
+}
+
 .input-field {
-  padding: 0.6rem;
+  padding: 0.6rem 0.6rem 0.6rem 2.2rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   background: white;
   color: #111827;
+  width: 100%;
 }
 
 .input-field.invalid {
   border-color: #dc2626;
 }
 
+/* Erro */
 .error {
   color: #dc2626;
   font-size: 0.75rem;
 }
 
-.buy-button {
-  padding: 0.75rem 1.75rem;
+/* BOTÃO COM ANIMAÇÃO */
+.submit-button {
+  padding: 0.8rem;
   background: #111827;
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s;
 }
 
-.buy-button:disabled {
+.submit-button:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.submit-button:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
+/* Notificação */
 .notification {
   padding: 1rem;
   border-radius: 6px;
@@ -81,10 +113,4 @@
   cursor: pointer;
   color: inherit;
   font-size: 1rem;
-}
-
-.title {
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
-  font-weight: bold;
 }
