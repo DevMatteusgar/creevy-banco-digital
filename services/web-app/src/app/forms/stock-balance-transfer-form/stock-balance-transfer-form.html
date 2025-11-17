@@ -1,0 +1,44 @@
+<div class="transfer-container">
+
+  <!-- Notificações -->
+  <div *ngIf="notification" class="notification" [ngClass]="notification.type">
+    <span class="notification-message">{{ notification.message }}</span>
+    <button class="notification-close" (click)="closeNotification()">✕</button>
+  </div>
+
+  <h2 class="title">Transferência entre Saldo</h2>
+
+  <form [formGroup]="transferForm" (ngSubmit)="submitTransfer()" class="transfer-form">
+
+    <div class="form-row">
+      <label>Tipo de Transferência</label>
+
+      <select formControlName="transferType" class="input-field">
+        <option value="savingsToInvestments">Poupança → Investimentos</option>
+        <option value="investmentsToSavings">Investimentos → Poupança</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Valor</label>
+
+      <input
+        type="text"
+        formControlName="amount"
+        class="input-field"
+        [value]="amountFormatted"
+        (input)="formatCurrency($event)"
+        [class.invalid]="transferForm.get('amount')?.invalid && transferForm.get('amount')?.touched"
+      />
+
+      <small class="error" *ngIf="transferForm.get('amount')?.invalid && transferForm.get('amount')?.touched">
+        Informe um valor válido e positivo.
+      </small>
+    </div>
+
+    <button class="buy-button" type="submit" [disabled]="isLoading || transferForm.invalid">
+      {{ isLoading ? 'Processando...' : 'Transferir' }}
+    </button>
+
+  </form>
+</div>

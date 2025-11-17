@@ -34,7 +34,7 @@ export class TransfersTable implements OnInit {
   carregarTransferencias(): void {
     this.transfersService.getMyTransfers().subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados[0]);
+        //console.log('Dados recebidos:', dados[0]);
 
         // Ordena do mais recente para o mais antigo
         this.transacoes = dados.sort((a, b) =>

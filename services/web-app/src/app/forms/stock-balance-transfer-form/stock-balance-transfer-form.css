@@ -1,0 +1,90 @@
+.transfer-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+.transfer-form {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.input-field {
+  padding: 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: white;
+  color: #111827;
+}
+
+.input-field.invalid {
+  border-color: #dc2626;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+.buy-button {
+  padding: 0.75rem 1.75rem;
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.buy-button:disabled {
+  opacity: 0.5;
+}
+
+.notification {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.notification.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+}

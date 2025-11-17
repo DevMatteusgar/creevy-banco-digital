@@ -45,4 +45,33 @@ export class BalanceService {
 
     return this.http.get<BalanceHistory[]>(`${this.userBalanceApiUrl}/myBalanceHistoryByTransfer`, { headers });
   }
+
+  transferSavingsToInvestments(amount: number): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(
+      `${this.userBalanceApiUrl}/transferSavingsToInvestments`,
+      { amount },
+      { headers }
+    );
+  }
+
+  transferInvestmentsToSavings(amount: number): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(
+      `${this.userBalanceApiUrl}/transferInvestmentsToSavings`,
+      { amount },
+      { headers }
+    );
+  }
 }
