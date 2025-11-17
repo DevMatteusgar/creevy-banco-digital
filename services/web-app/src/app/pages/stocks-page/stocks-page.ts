@@ -8,7 +8,6 @@ import {StockTransactionsTable} from '../../tables/stock-transactions-table/stoc
   imports: [
     NavbarLayout,
     BuyStockDashboard,
-    StockTransactionsTable
   ],
   templateUrl: './stocks-page.html',
   styleUrl: './stocks-page.css',
