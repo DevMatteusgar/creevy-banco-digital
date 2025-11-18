@@ -7,6 +7,7 @@ import app.back_end.user.dto.request.TransferInvestmentsToSavingsDtoRequest;
 import app.back_end.user.dto.response.InvestmentsToSavingsTransferDtoResponse;
 import app.back_end.user.dto.response.SavingsToInvestmentsResponseDto;
 import app.back_end.user.dto.response.UserBalanceHistoryDtoResponse;
+import app.back_end.user.dto.response.UserStocksBalanceDtoResponse;
 import app.back_end.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +31,17 @@ public class UserBalanceController {
     public ResponseEntity<UserBalanceDtoResponse> getBalance(@AuthenticationPrincipal User user) {
         String email = user.getUsername(); // vem direto do token JWT
         UserBalanceDtoResponse response = userBalanceService.getMyBalance(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/myStocksBalance")
+    public ResponseEntity<UserStocksBalanceDtoResponse> getUserStocksBalance(
+            @AuthenticationPrincipal User authenticatedUser) {
+
+        String email = authenticatedUser.getUsername(); // vem direto do token JWT
+
+        UserStocksBalanceDtoResponse response = userBalanceService.getUserStocksBalance(email);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

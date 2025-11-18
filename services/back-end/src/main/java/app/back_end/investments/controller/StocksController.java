@@ -1,6 +1,7 @@
 package app.back_end.investments.controller;
 
 import app.back_end.investments.dto.request.StocksBuyDtoRequest;
+import app.back_end.investments.dto.request.StocksSellDtoRequest;
 import app.back_end.investments.dto.request.StocksUpdateDtoRequest;
 import app.back_end.investments.dto.response.StockMarketInfoDto;
 import app.back_end.investments.dto.response.StocksSummaryDto;
@@ -41,6 +42,23 @@ public class StocksController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PostMapping("/sell")
+    public ResponseEntity<StocksTransferDtoResponse> sellStock(
+            @AuthenticationPrincipal User user,
+            @RequestBody StocksSellDtoRequest request
+    ) {
+        String email = user.getUsername();
+
+        StocksTransferDtoResponse response = stocksService.createStockSell(
+                email,
+                request.getStockQuantity(),
+                request.getStockIdentifier()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<StocksTransferDtoResponse> addStockQuantity(

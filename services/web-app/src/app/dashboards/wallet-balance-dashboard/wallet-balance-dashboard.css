@@ -1,0 +1,43 @@
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.card p {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.profit {
+  color: #0f9d58;
+}
+
+.loss {
+  color: #d23f31;
+}
+
+.loading, .error {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #b71c1c;
+}

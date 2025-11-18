@@ -113,6 +113,67 @@ public class StocksService {
         return updateExistingStock(user, stock, stockQuantity, stockPrice);
     }
 
+    @Transactional
+    public StocksTransferDtoResponse createStockSell(
+            String email,
+            Integer stockQuantity,
+            String stockIdentifier
+    ) {
+
+        validateInputs(stockIdentifier, stockQuantity);
+
+        // Buscar usuário
+        UserModel user = getUser(email);
+        Long userId = user.getId();
+
+        // Validar se a ação existe na carteira
+        StocksModel stock = stocksRepository
+                .findByStockIdentifierAndUserId(stockIdentifier, userId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Você não possui essa ação para vender.")
+                );
+
+        // Se não tem quantidade suficiente
+        if (stock.getStockQuantity() < stockQuantity) {
+            throw new IllegalArgumentException("Quantidade insuficiente para venda.");
+        }
+
+        // Consulta BRAPI
+        BrapiQuoteResponse.BrapiQuoteResult quote = getQuoteOrFail(stockIdentifier);
+        Double stockPrice = quote.getRegularMarketPrice();
+        String stockName = quote.getShortName();
+
+        Double transactionTotalPrice = stockQuantity * stockPrice;
+
+        // Atualiza saldo: VENDA → adiciona ao saldo
+        Double finalBalance = user.getInvestmentsBalance() + transactionTotalPrice;
+        user.setInvestmentsBalance(finalBalance);
+        userRepository.save(user);
+
+        // Atualiza a ação
+        int remainingQty = stock.getStockQuantity() - stockQuantity;
+
+        if (remainingQty == 0) {
+            // Se zerou a quantidade, remove
+            stocksRepository.delete(stock);
+        } else {
+            // Senão, atualiza quantidade + preço médio
+            stock.setStockQuantity(remainingQty);
+            stock.setStockPrice(stockPrice); // preço mais atual
+            stocksRepository.save(stock);
+        }
+
+        // Registrar transação
+        return stocksTransferService.createInvestmentTransaction(
+                stock,
+                stockQuantity,
+                stockPrice,
+                transactionTotalPrice,
+                finalBalance,
+                "StockSell"
+        );
+    }
+
     private void validateInputs(String stockIdentifier, Integer stockQuantity) {
         if (stockIdentifier == null || stockIdentifier.isBlank()) {
             throw new IllegalArgumentException("Identificador da ação inválido");
@@ -211,7 +272,7 @@ public class StocksService {
         String[] identifiers = {"PETR4", "MGLU3", "VALE3", "ITUB4"};
 
         return Arrays.stream(identifiers)
-                .map(this::getStockMarketInfo) // usa método abaixo
+                .map(this::getStockMarketInfo)
                 .toList();
     }
 

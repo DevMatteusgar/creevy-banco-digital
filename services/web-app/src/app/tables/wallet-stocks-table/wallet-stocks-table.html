@@ -1,0 +1,86 @@
+<div class="my-stocks-container">
+  <div class="header">
+    <h1>Minhas Ações</h1>
+    <button class="refresh-btn" (click)="loadMyStocks()">
+      🔄 Atualizar
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando suas ações...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Tabela -->
+  <div *ngIf="!loading && !error && myStocks.length > 0" class="table-container">
+    <table class="stocks-table">
+      <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nome da Ação</th>
+        <th>Quantidade</th>
+        <th>Preço Unitário</th>
+        <th>Valor Total</th>
+        <th class="actions-header">Ações</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <ng-container *ngFor="let stock of myStocks; let i = index">
+
+        <!-- LINHA PRINCIPAL -->
+        <tr>
+          <td class="stock-code">{{ stock.stockIdentifier }}</td>
+          <td class="stock-name">{{ stock.stockName }}</td>
+          <td class="text-center">{{ stock.stockQuantity }}</td>
+          <td>{{ stock.stockPrice | currency:'BRL' }}</td>
+          <td class="total-value">{{ stock.stockTotalValue | currency:'BRL' }}</td>
+
+          <td class="action-cell">
+            <button class="sell-btn" (click)="toggleSellForm(i, stock)">
+              Vender
+            </button>
+          </td>
+        </tr>
+
+        <!-- FORM EXPANDIDO -->
+        <tr *ngIf="selectedStockIndex === i" class="sell-row">
+          <td colspan="6">
+            <div class="sell-form-container">
+              <h4>Vender {{ stock.stockName }} ({{ stock.stockIdentifier }})</h4>
+
+              <div class="form-group">
+                <label>Quantidade a vender:</label>
+                <input
+                  type="number"
+                  [(ngModel)]="sellForm.stockQuantity"
+                  min="1"
+                  class="sell-input"
+                />
+              </div>
+
+              <button class="confirm-sell-btn" (click)="submitSell()">
+                Confirmar Venda
+              </button>
+            </div>
+          </td>
+        </tr>
+
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && myStocks.length === 0" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3>Você ainda não possui ações</h3>
+    <p>Comece a investir agora e acompanhe seu portfólio aqui.</p>
+  </div>
+</div>

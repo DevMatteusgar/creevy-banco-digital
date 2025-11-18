@@ -1,0 +1,160 @@
+.my-stocks-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.refresh-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.refresh-btn:hover {
+  background-color: #45a049;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #c62828;
+  margin-bottom: 20px;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stocks-table thead {
+  background-color: #f8f9fa;
+}
+
+.stocks-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: #5f6368;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.actions-header {
+  width: 120px;
+  text-align: center;
+}
+
+.action-cell {
+  text-align: center;
+}
+
+.stocks-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stock-code {
+  font-weight: 700;
+  color: #1967d2;
+}
+
+.total-value {
+  font-weight: 700;
+  color: #1967d2;
+}
+
+/* Sell Form Row */
+.sell-row td {
+  background: #fafafa;
+  padding: 20px;
+}
+
+.sell-form-container {
+  padding: 15px;
+}
+
+.sell-input {
+  width: 200px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.sell-btn {
+  padding: 8px 14px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sell-btn:hover {
+  background-color: #b71c1c;
+}
+
+.confirm-sell-btn {
+  padding: 10px 18px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.confirm-sell-btn:hover {
+  background-color: #125a9e;
+}

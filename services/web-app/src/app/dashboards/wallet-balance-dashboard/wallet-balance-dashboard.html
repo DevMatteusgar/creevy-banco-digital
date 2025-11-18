@@ -1,0 +1,32 @@
+<div *ngIf="loading" class="loading">Carregando...</div>
+<div *ngIf="error" class="error">Erro ao buscar dados.</div>
+
+<div *ngIf="!loading && !error" class="cards">
+
+  <div class="card">
+    <h3>Total Investido</h3>
+    <p>R$ {{ data.totalInvested | number:'1.2-2' }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Valor Atual</h3>
+    <p>R$ {{ data.totalCurrent | number:'1.2-2' }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Lucro (R$)</h3>
+    <p [class.profit]="data.totalProfitValue >= 0"
+       [class.loss]="data.totalProfitValue < 0">
+      R$ {{ data.totalProfitValue | number:'1.2-2' }}
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Lucro (%)</h3>
+    <p [class.profit]="data.totalProfitPercent >= 0"
+       [class.loss]="data.totalProfitPercent < 0">
+      {{ data.totalProfitPercent | number:'1.2-2' }}%
+    </p>
+  </div>
+
+</div>

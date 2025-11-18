@@ -5,6 +5,8 @@ import { StockMarketInfo } from '../../interfaces/StockMarketInfo';
 import {StocksBuyResponse} from '../../interfaces/StocksBuyResponse';
 import {StocksBuyRequest} from '../../interfaces/StocksBuyRequest';
 import {StocksTransferResponse} from '../../interfaces/StocksTransferResponse';
+import {StocksSummary} from '../../interfaces/StocksSummary';
+import {StocksSellResponse} from '../../interfaces/StocksSellResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +17,14 @@ export class StockMarketService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  }
+
+  private postHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     });
   }
@@ -29,15 +36,23 @@ export class StockMarketService {
 
   buyStock(stockIdentifier: string, stockQuantity: number): Observable<StocksBuyResponse> {
     const url = `${this.apiUrl}/buy`;
-    const body: StocksBuyRequest = {
-      stockQuantity,
-      stockIdentifier
-    };
-    return this.http.post<StocksBuyResponse>(url, body, { headers: this.getHeaders() });
+    const body: StocksBuyRequest = { stockIdentifier, stockQuantity };
+    return this.http.post<StocksBuyResponse>(url, body, { headers: this.postHeaders() });
   }
 
   getAllTransactions(): Observable<StocksTransferResponse[]> {
     const url = `${this.apiUrl}/listAllTransactions`;
     return this.http.get<StocksTransferResponse[]>(url, { headers: this.getHeaders() });
+  }
+
+  getMyStocks(): Observable<StocksSummary[]> {
+    const url = `${this.apiUrl}/myStocks`;
+    return this.http.get<StocksSummary[]>(url, { headers: this.getHeaders() });
+  }
+
+  sellStock(stockIdentifier: string, stockQuantity: number): Observable<StocksSellResponse> {
+    const url = `${this.apiUrl}/sell`;
+    const body = { stockIdentifier, stockQuantity };
+    return this.http.post<StocksSellResponse>(url, body, { headers: this.getHeaders() });
   }
 }

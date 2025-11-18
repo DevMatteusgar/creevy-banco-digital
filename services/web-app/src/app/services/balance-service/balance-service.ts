@@ -1,77 +1,69 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {UserBalanceResponse} from '../../interfaces/UserBalanceResponse';
-import {BalanceHistory} from '../../interfaces/BalanceHistory';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UserBalanceResponse } from '../../interfaces/UserBalanceResponse';
+import { BalanceHistory } from '../../interfaces/BalanceHistory';
+import { UserStocksBalanceResponse } from '../../interfaces/UserStocksBalanceResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BalanceService {
 
-  private userBalanceApiUrl: string = 'http://192.168.56.10:8080/balance'
+  private userBalanceApiUrl: string = 'http://192.168.56.10:8080/balance';
 
   constructor(private http: HttpClient) {}
 
-  getMyBalance(): Observable<UserBalanceResponse> {
-    const token = localStorage.getItem('token'); // ou sessionStorage
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
 
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
+  }
 
-    return this.http.get<UserBalanceResponse>(`${this.userBalanceApiUrl}/myBalance`, { headers });
+  getMyBalance(): Observable<UserBalanceResponse> {
+    return this.http.get<UserBalanceResponse>(
+      `${this.userBalanceApiUrl}/myBalance`,
+      { headers: this.getHeaders() }
+    );
   }
 
   getBalanceHistory(): Observable<BalanceHistory[]> {
-    const token = localStorage.getItem('token'); // ou sessionStorage
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.get<BalanceHistory[]>(`${this.userBalanceApiUrl}/myBalanceHistory`, { headers });
+    return this.http.get<BalanceHistory[]>(
+      `${this.userBalanceApiUrl}/myBalanceHistory`,
+      { headers: this.getHeaders() }
+    );
   }
 
   getBalanceHistoryByTransfer(): Observable<BalanceHistory[]> {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.get<BalanceHistory[]>(`${this.userBalanceApiUrl}/myBalanceHistoryByTransfer`, { headers });
+    return this.http.get<BalanceHistory[]>(
+      `${this.userBalanceApiUrl}/myBalanceHistoryByTransfer`,
+      { headers: this.getHeaders() }
+    );
   }
 
   transferSavingsToInvestments(amount: number): Observable<any> {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
     return this.http.post(
       `${this.userBalanceApiUrl}/transferSavingsToInvestments`,
       { amount },
-      { headers }
+      { headers: this.getHeaders() }
     );
   }
 
   transferInvestmentsToSavings(amount: number): Observable<any> {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
     return this.http.post(
       `${this.userBalanceApiUrl}/transferInvestmentsToSavings`,
       { amount },
-      { headers }
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getMyStocksBalance(): Observable<UserStocksBalanceResponse> {
+    return this.http.get<UserStocksBalanceResponse>(
+      `${this.userBalanceApiUrl}/myStocksBalance`,
+      { headers: this.getHeaders() }
     );
   }
 }
