@@ -106,7 +106,7 @@ public class StocksService {
                 .findByStockIdentifierAndUserId(stockIdentifier, userId)
                 .orElseThrow(() -> new IllegalArgumentException("Ação não encontrada para o usuário."));
 
-        // Preço atualizado via BRAPI
+        // Preço atualizado via BRAPI api
         BrapiQuoteResponse.BrapiQuoteResult quote = getQuoteOrFail(stockIdentifier);
         Double stockPrice = quote.getRegularMarketPrice();
 
