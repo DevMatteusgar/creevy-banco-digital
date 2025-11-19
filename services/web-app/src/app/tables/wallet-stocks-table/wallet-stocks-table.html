@@ -1,9 +1,24 @@
+<!-- wallet-stocks-table.html -->
 <div class="my-stocks-container">
+  <!-- Header -->
   <div class="header">
-    <h1>Minhas Ações</h1>
+    <div class="header-content">
+      <h1>Minhas Ações</h1>
+      <p class="subtitle">Gerencie seu portfólio de investimentos</p>
+    </div>
     <button class="refresh-btn" (click)="loadMyStocks()">
-      🔄 Atualizar
+      <span class="icon">🔄</span>
+      Atualizar
     </button>
+  </div>
+
+  <!-- Summary Card -->
+  <div class="summary-card">
+    <div class="summary-header">
+      <span class="icon">📈</span>
+      <h3>Valor Total do Portfólio</h3>
+    </div>
+    <p class="total-portfolio">{{ calculateTotalValue() | currency:'BRL' }}</p>
   </div>
 
   <!-- Loading -->
@@ -14,6 +29,7 @@
 
   <!-- Error -->
   <div *ngIf="error && !loading" class="error-message">
+    <span class="error-icon">⚠️</span>
     {{ error }}
   </div>
 
@@ -24,9 +40,9 @@
       <tr>
         <th>Código</th>
         <th>Nome da Ação</th>
-        <th>Quantidade</th>
-        <th>Preço Unitário</th>
-        <th>Valor Total</th>
+        <th class="text-center">Quantidade</th>
+        <th class="text-right">Preço Unitário</th>
+        <th class="text-right">Valor Total</th>
         <th class="actions-header">Ações</th>
       </tr>
       </thead>
@@ -35,16 +51,22 @@
       <ng-container *ngFor="let stock of myStocks; let i = index">
 
         <!-- LINHA PRINCIPAL -->
-        <tr>
+        <tr [class.selected-row]="selectedStockIndex === i">
           <td class="stock-code">{{ stock.stockIdentifier }}</td>
           <td class="stock-name">{{ stock.stockName }}</td>
-          <td class="text-center">{{ stock.stockQuantity }}</td>
-          <td>{{ stock.stockPrice | currency:'BRL' }}</td>
-          <td class="total-value">{{ stock.stockTotalValue | currency:'BRL' }}</td>
+          <td class="text-center">
+            <span class="quantity-badge">{{ stock.stockQuantity }}</span>
+          </td>
+          <td class="text-right">{{ stock.stockPrice | currency:'BRL' }}</td>
+          <td class="text-right total-value">{{ stock.stockTotalValue | currency:'BRL' }}</td>
 
           <td class="action-cell">
-            <button class="sell-btn" (click)="toggleSellForm(i, stock)">
-              Vender
+            <button
+              class="sell-btn"
+              [class.active]="selectedStockIndex === i"
+              (click)="toggleSellForm(i, stock)">
+              <span *ngIf="selectedStockIndex !== i">Vender</span>
+              <span *ngIf="selectedStockIndex === i">✕ Cancelar</span>
             </button>
           </td>
         </tr>
@@ -55,19 +77,47 @@
             <div class="sell-form-container">
               <h4>Vender {{ stock.stockName }} ({{ stock.stockIdentifier }})</h4>
 
-              <div class="form-group">
-                <label>Quantidade a vender:</label>
-                <input
-                  type="number"
-                  [(ngModel)]="sellForm.stockQuantity"
-                  min="1"
-                  class="sell-input"
-                />
+              <!-- Mensagem de Erro -->
+              <div *ngIf="sellErrorMessage" class="sell-error-message">
+                <span class="error-icon-inline">⚠️</span>
+                <span>{{ sellErrorMessage }}</span>
               </div>
 
-              <button class="confirm-sell-btn" (click)="submitSell()">
-                Confirmar Venda
-              </button>
+              <div class="sell-form-card">
+                <div class="form-group">
+                  <label>Quantidade a vender</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="sellForm.stockQuantity"
+                    [min]="1"
+                    [max]="stock.stockQuantity"
+                    [class.input-error]="sellErrorMessage"
+                    class="sell-input"
+                    placeholder="Digite a quantidade"
+                    (input)="sellErrorMessage = ''"
+                  />
+                  <p class="input-helper">Disponível: {{ stock.stockQuantity }} ações</p>
+                </div>
+
+                <!-- Valor Estimado -->
+                <div *ngIf="sellForm.stockQuantity > 0" class="estimated-value-card">
+                  <div class="estimated-row">
+                    <span class="estimated-label">Valor estimado:</span>
+                    <span class="estimated-amount">{{ calculateEstimatedValue() | currency:'BRL' }}</span>
+                  </div>
+                  <p class="estimated-calculation">
+                    {{ sellForm.stockQuantity }} × {{ stock.stockPrice | currency:'BRL' }}
+                  </p>
+                </div>
+
+                <button
+                  class="confirm-sell-btn"
+                  (click)="submitSell()"
+                  [disabled]="sellLoading || sellForm.stockQuantity <= 0">
+                  <span *ngIf="!sellLoading">Confirmar Venda</span>
+                  <span *ngIf="sellLoading">Processando...</span>
+                </button>
+              </div>
             </div>
           </td>
         </tr>

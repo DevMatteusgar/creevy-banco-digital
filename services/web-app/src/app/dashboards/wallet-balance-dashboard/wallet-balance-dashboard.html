@@ -1,32 +1,121 @@
-<div *ngIf="loading" class="loading">Carregando...</div>
-<div *ngIf="error" class="error">Erro ao buscar dados.</div>
+<!-- wallet-balance-dashboard.html -->
+<div class="dashboard-container">
 
-<div *ngIf="!loading && !error" class="cards">
-
-  <div class="card">
-    <h3>Total Investido</h3>
-    <p>R$ {{ data.totalInvested | number:'1.2-2' }}</p>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando seus dados...</p>
   </div>
 
-  <div class="card">
-    <h3>Valor Atual</h3>
-    <p>R$ {{ data.totalCurrent | number:'1.2-2' }}</p>
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <span class="error-icon">⚠️</span>
+    <span>Erro ao carregar os dados. Tente novamente.</span>
   </div>
 
-  <div class="card">
-    <h3>Lucro (R$)</h3>
-    <p [class.profit]="data.totalProfitValue >= 0"
-       [class.loss]="data.totalProfitValue < 0">
-      R$ {{ data.totalProfitValue | number:'1.2-2' }}
-    </p>
-  </div>
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error">
 
-  <div class="card">
-    <h3>Lucro (%)</h3>
-    <p [class.profit]="data.totalProfitPercent >= 0"
-       [class.loss]="data.totalProfitPercent < 0">
-      {{ data.totalProfitPercent | number:'1.2-2' }}%
-    </p>
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <h1>Dashboard Financeiro</h1>
+        <p class="subtitle">Acompanhe o desempenho do seu portfólio</p>
+      </div>
+      <button class="refresh-btn" (click)="loadBalance()">
+        <span class="icon">🔄</span>
+        Atualizar
+      </button>
+    </div>
+
+    <!-- Main Stats Card -->
+    <div class="main-stats-card" [class.profit-bg]="isProfit()" [class.loss-bg]="!isProfit()">
+      <div class="stats-header">
+        <div class="icon-container" [class.profit-icon]="isProfit()" [class.loss-icon]="!isProfit()">
+          <span class="trend-icon">{{ isProfit() ? '📈' : '📉' }}</span>
+        </div>
+        <div class="stats-info">
+          <h2>Resultado Total</h2>
+          <div class="stats-values">
+            <span class="main-value" [class.profit-color]="isProfit()" [class.loss-color]="!isProfit()">
+              {{ data.totalProfitValue | currency:'BRL' }}
+            </span>
+            <span class="percentage-badge" [class.profit-badge]="isProfit()" [class.loss-badge]="!isProfit()">
+              {{ getProfitSign() }}{{ data.totalProfitPercent | number:'1.2-2' }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-summary">
+        <div class="summary-item">
+          <p class="summary-label">Investido</p>
+          <p class="summary-value">{{ data.totalInvested | currency:'BRL' }}</p>
+        </div>
+        <div class="summary-item">
+          <p class="summary-label">Valor Atual</p>
+          <p class="summary-value">{{ data.totalCurrent | currency:'BRL' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Cards Grid -->
+    <div class="cards-grid">
+
+      <!-- Total Invested Card -->
+      <div class="detail-card">
+        <div class="card-header">
+          <h3>Total Investido</h3>
+          <div class="card-icon blue-icon">
+            <span>💰</span>
+          </div>
+        </div>
+        <p class="card-value">{{ data.totalInvested | currency:'BRL' }}</p>
+        <p class="card-description">Capital aplicado</p>
+      </div>
+
+      <!-- Current Value Card -->
+      <div class="detail-card">
+        <div class="card-header">
+          <h3>Valor Atual</h3>
+          <div class="card-icon green-icon">
+            <span>📊</span>
+          </div>
+        </div>
+        <p class="card-value">{{ data.totalCurrent | currency:'BRL' }}</p>
+        <p class="card-description">Valor de mercado</p>
+      </div>
+
+      <!-- Profit Value Card -->
+      <div class="detail-card highlight-card" [class.profit-border]="isProfit()" [class.loss-border]="!isProfit()">
+        <div class="card-header">
+          <h3>Lucro/Prejuízo</h3>
+          <div class="card-icon" [class.profit-icon-bg]="isProfit()" [class.loss-icon-bg]="!isProfit()">
+            <span>{{ isProfit() ? '📈' : '📉' }}</span>
+          </div>
+        </div>
+        <p class="card-value" [class.profit-color]="isProfit()" [class.loss-color]="!isProfit()">
+          {{ data.totalProfitValue | currency:'BRL' }}
+        </p>
+        <p class="card-description">{{ isProfit() ? 'Ganho total' : 'Perda total' }}</p>
+      </div>
+
+      <!-- Profit Percentage Card -->
+      <div class="detail-card highlight-card" [class.profit-border]="isProfit()" [class.loss-border]="!isProfit()">
+        <div class="card-header">
+          <h3>Rentabilidade</h3>
+          <div class="card-icon" [class.profit-icon-bg]="isProfit()" [class.loss-icon-bg]="!isProfit()">
+            <span>{{ isProfit() ? '✅' : '❌' }}</span>
+          </div>
+        </div>
+        <p class="card-value" [class.profit-color]="isProfit()" [class.loss-color]="!isProfit()">
+          {{ getProfitSign() }}{{ data.totalProfitPercent | number:'1.2-2' }}%
+        </p>
+        <p class="card-description">Retorno percentual</p>
+      </div>
+
+    </div>
+
   </div>
 
 </div>
