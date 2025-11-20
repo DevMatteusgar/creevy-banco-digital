@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 import app.back_end.charts.service.IndicatorService;
 
 import java.math.BigDecimal;
@@ -14,7 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -23,12 +22,10 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class ChartService {
-
-    @Autowired
-    private IndicatorService indicatorService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -36,12 +33,10 @@ public class ChartService {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // Cache com expiração
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
-    private final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutos de cache
+    private final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutos
 
-    // Your Alpha Vantage API key
-    private final String apiKey = "SUA_API_KEY_ALPHA_VANTAGE";
+    private final String polygonApiKey = "rrQTEGlmfcAvPhpKn9stVf8vypS4R3yd";
 
     public ChartDataResponse getChartInfo(String symbol) {
         long now = System.currentTimeMillis();
@@ -53,85 +48,54 @@ public class ChartService {
         }
 
         try {
-            // Faz requisição para Alpha Vantage
-            URI uri = UriComponentsBuilder.fromUriString("https://www.alphavantage.co/query")
-                    .queryParam("function", "TIME_SERIES_DAILY")
-                    .queryParam("symbol", symbol)
-                    .queryParam("apikey", apiKey)
-                    .queryParam("outputsize", "compact") // ou "full" se quiser histórico completo
+            URI uri = UriComponentsBuilder.fromUriString(
+                            "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/day/2023-01-01/2025-12-31")
+                    .queryParam("adjusted", "true")
+                    .queryParam("sort", "asc")
+                    .queryParam("apiKey", polygonApiKey)
                     .build().toUri();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .GET()
-                    .build();
-
+            HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
             if (response.statusCode() != 200) {
-                throw new RuntimeException("Erro Alpha Vantage, status: " + response.statusCode());
+                throw new RuntimeException("Erro Polygon.io: " + response.statusCode());
             }
 
             JsonNode json = objectMapper.readTree(response.body());
-
-            // O nó com os dados de tempo
-            JsonNode timeSeries = json.get("Time Series (Daily)");
-            if (timeSeries == null) {
-                throw new RuntimeException("Resposta Alpha Vantage inválida para símbolo " + symbol + ": " + response.body());
+            JsonNode results = json.get("results");
+            if (results == null || !results.isArray()) {
+                throw new RuntimeException("Resposta inválida Polygon.io: " + response.body());
             }
 
-            // Parse das candles
             List<CandleDto> candles = new ArrayList<>();
-            for (Iterator<String> it = timeSeries.fieldNames(); it.hasNext(); ) {
-                String dateStr = it.next();
-                JsonNode dayData = timeSeries.get(dateStr);
-
+            for (JsonNode node : results) {
                 CandleDto c = new CandleDto();
-                LocalDate dt = LocalDate.parse(dateStr);
-                LocalDateTime ldt = dt.atStartOfDay();
-                c.setTime(ldt);
-
-                c.setOpen(new BigDecimal(dayData.get("1. open").asText()));
-                c.setHigh(new BigDecimal(dayData.get("2. high").asText()));
-                c.setLow(new BigDecimal(dayData.get("3. low").asText()));
-                c.setClose(new BigDecimal(dayData.get("4. close").asText()));
-                c.setVolume(dayData.get("5. volume").asLong());
-
+                long timestamp = node.get("t").asLong();
+                c.setTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()));
+                c.setOpen(BigDecimal.valueOf(node.get("o").asDouble()));
+                c.setHigh(BigDecimal.valueOf(node.get("h").asDouble()));
+                c.setLow(BigDecimal.valueOf(node.get("l").asDouble()));
+                c.setClose(BigDecimal.valueOf(node.get("c").asDouble()));
+                c.setVolume(node.get("v").asLong());
                 candles.add(c);
             }
 
-            // Ordena por data crescente
-            candles.sort(Comparator.comparing(CandleDto::getTime));
-
-            // Preenche a resposta
             ChartDataResponse res = new ChartDataResponse();
             res.setSymbol(symbol);
-            // Último preço é o close da última candle
             if (!candles.isEmpty()) {
-                CandleDto last = candles.get(candles.size() - 1);
-                res.setPrice(last.getClose());
+                res.setPrice(candles.get(candles.size() - 1).getClose());
             }
             res.setCandles(candles);
             res.setLastUpdate(LocalDateTime.now());
 
-            // Calcula indicadores
-            List<Double> closes = candles.stream()
-                    .map(c -> c.getClose().doubleValue())
-                    .collect(Collectors.toList());
-
-            Map<String, List<Double>> indicators = new HashMap<>();
-            indicators.put("SMA_20", indicatorService.sma(closes, 20));
-            indicators.put("EMA_20", indicatorService.ema(closes, 20));
-            indicators.put("RSI_14", indicatorService.rsi(closes, 14));
-            indicators.put("MACD_12_26", indicatorService.macd(closes, 12, 26));
-            res.setIndicators(indicators);
-
-            // Salva no cache
             cache.put(symbol, new CacheEntry(res, now));
 
             return res;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar dados Alpha Vantage para " + symbol + ": " + e.getMessage(), e);
+            System.err.println("[ChartService] Erro ao buscar dados Polygon.io para " + symbol + ": " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -142,15 +106,16 @@ public class ChartService {
             try {
                 ChartDataResponse data = getChartInfo(symbol);
                 if (data.getCandles() != null && !data.getCandles().isEmpty()) {
-                    CandleDto last = data.getCandles().get(data.getCandles().size() - 1);
                     Map<String, Object> payload = new HashMap<>();
                     payload.put("symbol", symbol);
-                    payload.put("candle", last);
-                    payload.put("indicators", data.getIndicators());
+                    payload.put("candles", data.getCandles());
+
+                    // Envia pelo WebSocket
                     messagingTemplate.convertAndSend("/topic/chart/" + symbol, payload);
+
                 }
             } catch (Exception e) {
-                System.err.println("Erro ao publicar realtime AV " + symbol + ": " + e.getMessage());
+                System.err.println("[ChartService] Erro ao publicar realtime Polygon.io " + symbol + ": " + e.getMessage());
             }
         }
     }

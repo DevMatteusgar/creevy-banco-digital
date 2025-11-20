@@ -1,12 +1,18 @@
-<h1>Gráfico de ações </h1>
+<h1>Gráfico de ações</h1>
+
+<!-- Seletor de símbolo -->
+<label for="symbol-select">Escolha a ação:</label>
+<select id="symbol-select" [(ngModel)]="selectedSymbol" (change)="selectSymbol(selectedSymbol)">
+  <option *ngFor="let s of availableSymbols" [value]="s">{{ s }}</option>
+</select>
+
+<!-- Gráfico -->
 <div id="chart-wrapper" *ngIf="chartOptions">
   <apx-chart
-    #chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
     [xaxis]="chartOptions.xaxis"
-    [stroke]="chartOptions.stroke"
-    [tooltip]="chartOptions.tooltip"
+    [yaxis]="chartOptions.yaxis"
     [title]="chartOptions.title"
   ></apx-chart>
 </div>
