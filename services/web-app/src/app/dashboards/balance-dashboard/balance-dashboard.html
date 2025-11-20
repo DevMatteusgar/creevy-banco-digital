@@ -1,50 +1,110 @@
-<div class="container">
-  <div class="dashboard">
-    <div class="blocos-container">
-      <div class="bloco">
-        <h3 class="titulo">Saldo Total</h3>
-        <div class="valor-container">
-          <span class="cifrao">R$</span>
-          <span class="valor">{{ formatarMoeda(saldoTotal) }}</span>
-        </div>
+<!-- balance-dashboard.html -->
+<div class="balance-dashboard">
+
+  <!-- Loading State -->
+  <div *ngIf="carregando" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando seus dados...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="erro && !carregando" class="error-message">
+    <span class="error-icon">⚠️</span>
+    <span>{{ erro }}</span>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!carregando && !erro">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <h1>Visão Geral</h1>
+        <p class="subtitle">Acompanhe seus saldos e investimentos</p>
       </div>
-
-      <div class="bloco">
-        <h3 class="titulo">Poupança</h3>
-        <div class="valor-container">
-          <span class="cifrao">R$</span>
-          <span class="valor">{{ formatarMoeda(poupanca) }}</span>
-        </div>
-      </div>
-
-      <div class="bloco">
-        <h3 class="titulo">Investimentos</h3>
-        <div class="valor-container">
-          <svg class="icone-carteira" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
-            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
-          </svg>
-          <span class="valor">{{ formatarMoeda(investimentos) }}</span>
-          <span class="porcentagem">{{ porcentagemInvestimentos > 0 ? '+' : '' }}{{ porcentagemInvestimentos }}%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="acoes-container">
-      <button class="btn-exportar">Exportar</button>
-
-      <div class="info-grupo">
-        <div class="info-atualizacao">
-          <span class="texto-atualizado">Atualizado em</span>
-          <span class="data-atualizacao">{{ dataAtualizacao }}</span>
-        </div>
-
-        <button class="btn-recarregar" (click)="atualizar()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-          </svg>
+      <div class="header-actions">
+        <button class="btn-refresh" (click)="atualizar()">
+          <span class="icon">🔄</span>
+          Atualizar
+        </button>
+        <button class="btn-export" (click)="exportar()">
+          <span class="icon">📥</span>
+          Exportar
         </button>
       </div>
     </div>
+
+    <!-- Main Cards Grid -->
+    <div class="cards-grid">
+
+      <!-- Saldo Total Card -->
+      <div class="balance-card total-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h3>Saldo Total</h3>
+            <p class="card-subtitle">Patrimônio total</p>
+          </div>
+          <div class="card-icon blue-icon">
+            <span>💰</span>
+          </div>
+        </div>
+        <div class="card-value-container">
+          <span class="currency-symbol">R$</span>
+          <span class="card-value">{{ formatarMoeda(saldoTotal) }}</span>
+        </div>
+      </div>
+
+      <!-- Poupança Card -->
+      <div class="balance-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h3>Poupança</h3>
+            <p class="card-subtitle">Saldo em poupança</p>
+          </div>
+          <div class="card-icon yellow-icon">
+            <span>🏦</span>
+          </div>
+        </div>
+        <div class="card-value-container">
+          <span class="currency-symbol">R$</span>
+          <span class="card-value">{{ formatarMoeda(poupanca) }}</span>
+        </div>
+      </div>
+
+      <!-- Investimentos Card -->
+      <div class="balance-card investments-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h3>Investimentos</h3>
+            <p class="card-subtitle">Carteira de investimentos</p>
+          </div>
+          <div class="card-icon green-icon">
+            <span>📈</span>
+          </div>
+        </div>
+        <div class="card-value-container">
+          <span class="currency-symbol">R$</span>
+          <span class="card-value">{{ formatarMoeda(investimentos) }}</span>
+        </div>
+        <div class="percentage-badge">
+          <span class="percentage-icon">📈</span>
+          <span class="percentage-value">+{{ porcentagemInvestimentos | number:'1.2-2' }}%</span>
+          <span class="percentage-label">do total</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Info Footer -->
+    <div class="info-footer">
+      <div class="update-info">
+        <div class="status-dot"></div>
+        <span class="update-label">Última atualização:</span>
+        <span class="update-time">{{ dataAtualizacao }}</span>
+      </div>
+      <span class="realtime-info">Os valores são atualizados em tempo real</span>
+    </div>
+
   </div>
+
 </div>

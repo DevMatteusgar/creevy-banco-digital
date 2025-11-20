@@ -1,41 +1,56 @@
-<app-navbar-layout></app-navbar-layout>
+<!-- dashboard-page.html -->
+<div class="dashboard-page">
+  <!-- Navbar full-width no topo -->
+  <app-navbar-layout></app-navbar-layout>
 
-<div class="dashboard-container">
-  <div class="button-group">
-    <button
-      class="tab-button"
-      (click)="setActiveTab('my-balance')">
-      <span [class.active]="activeTab === 'my-balance'">
-        Saldo
-      </span>
-    </button>
+  <!-- Container centralizado -->
+  <div class="dashboard-container">
 
-    <button
-      class="tab-button"
-      (click)="setActiveTab('my-transfers')">
-      <span [class.active]="activeTab === 'my-transfers'">
-        Transferências
-      </span>
-    </button>
-  </div>
+    <!-- Tabs de navegação -->
+    <div class="button-group">
+      <button
+        class="tab-button"
+        (click)="setActiveTab('my-balance')">
+        <span [class.active]="activeTab === 'my-balance'">
+          Saldo
+        </span>
+      </button>
 
-  <div class="content">
-    <!-- ABA SALDO -->
-    <div *ngIf="activeTab === 'my-balance'">
-      <app-balance-dashboard></app-balance-dashboard>
+      <button
+        class="tab-button"
+        (click)="setActiveTab('my-transfers')">
+        <span [class.active]="activeTab === 'my-transfers'">
+          Transferências
+        </span>
+      </button>
+    </div>
 
-      <div class="charts-session">
-        <div class="balanceHistoryChartLine">
-          <app-balance-history-chart-dashboard></app-balance-history-chart-dashboard>
-          <app-balance-history-by-transfer-chart-dashboard></app-balance-history-by-transfer-chart-dashboard>
+    <!-- Conteúdo das abas -->
+    <div class="content">
+
+      <!-- ABA SALDO -->
+      <div *ngIf="activeTab === 'my-balance'">
+        <!-- Dashboard de saldo -->
+        <app-balance-dashboard></app-balance-dashboard>
+
+        <!-- Sessão de gráficos -->
+        <div class="charts-session">
+          <!-- Gráficos em grid 2 colunas -->
+          <div class="balanceHistoryChartLine">
+            <app-balance-history-chart-dashboard></app-balance-history-chart-dashboard>
+            <app-balance-history-by-transfer-chart-dashboard></app-balance-history-by-transfer-chart-dashboard>
+          </div>
+
+          <!-- Grid de ações full width -->
           <app-stock-market-grid-table></app-stock-market-grid-table>
         </div>
       </div>
-    </div>
 
-    <!-- ABA TRANSFERÊNCIAS -->
-    <div *ngIf="activeTab === 'my-transfers'">
-      <app-last-transfers-dashboard></app-last-transfers-dashboard>
+      <!-- ABA TRANSFERÊNCIAS -->
+      <div *ngIf="activeTab === 'my-transfers'">
+        <app-last-transfers-dashboard></app-last-transfers-dashboard>
+      </div>
+
     </div>
   </div>
 </div>
