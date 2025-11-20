@@ -6,17 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
+import org.springframework.web.util.UriComponentsBuilder;
+import app.back_end.charts.service.IndicatorService;
 
-import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ChartService {
@@ -27,30 +33,89 @@ public class ChartService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    private final Map<String, ChartDataResponse> cache = new HashMap<>();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    // Cache com expiração
+    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
+    private final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutos de cache
+
+    // Your Alpha Vantage API key
+    private final String apiKey = "SUA_API_KEY_ALPHA_VANTAGE";
 
     public ChartDataResponse getChartInfo(String symbol) {
+        long now = System.currentTimeMillis();
+        if (cache.containsKey(symbol)) {
+            CacheEntry entry = cache.get(symbol);
+            if (now - entry.timestamp < CACHE_DURATION_MS) {
+                return entry.data;
+            }
+        }
+
         try {
-            if (cache.containsKey(symbol)) return cache.get(symbol);
+            // Faz requisição para Alpha Vantage
+            URI uri = UriComponentsBuilder.fromUriString("https://www.alphavantage.co/query")
+                    .queryParam("function", "TIME_SERIES_DAILY")
+                    .queryParam("symbol", symbol)
+                    .queryParam("apikey", apiKey)
+                    .queryParam("outputsize", "compact") // ou "full" se quiser histórico completo
+                    .build().toUri();
 
-            Stock stock = YahooFinance.get(symbol);
-            if (stock == null || stock.getQuote() == null) throw new RuntimeException("Ativo não encontrado: " + symbol);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .GET()
+                    .build();
 
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Erro Alpha Vantage, status: " + response.statusCode());
+            }
+
+            JsonNode json = objectMapper.readTree(response.body());
+
+            // O nó com os dados de tempo
+            JsonNode timeSeries = json.get("Time Series (Daily)");
+            if (timeSeries == null) {
+                throw new RuntimeException("Resposta Alpha Vantage inválida para símbolo " + symbol + ": " + response.body());
+            }
+
+            // Parse das candles
+            List<CandleDto> candles = new ArrayList<>();
+            for (Iterator<String> it = timeSeries.fieldNames(); it.hasNext(); ) {
+                String dateStr = it.next();
+                JsonNode dayData = timeSeries.get(dateStr);
+
+                CandleDto c = new CandleDto();
+                LocalDate dt = LocalDate.parse(dateStr);
+                LocalDateTime ldt = dt.atStartOfDay();
+                c.setTime(ldt);
+
+                c.setOpen(new BigDecimal(dayData.get("1. open").asText()));
+                c.setHigh(new BigDecimal(dayData.get("2. high").asText()));
+                c.setLow(new BigDecimal(dayData.get("3. low").asText()));
+                c.setClose(new BigDecimal(dayData.get("4. close").asText()));
+                c.setVolume(dayData.get("5. volume").asLong());
+
+                candles.add(c);
+            }
+
+            // Ordena por data crescente
+            candles.sort(Comparator.comparing(CandleDto::getTime));
+
+            // Preenche a resposta
             ChartDataResponse res = new ChartDataResponse();
             res.setSymbol(symbol);
-            res.setPrice(stock.getQuote().getPrice());
-            res.setOpen(stock.getQuote().getOpen());
-            res.setHigh(stock.getQuote().getDayHigh());
-            res.setLow(stock.getQuote().getDayLow());
-            res.setPreviousClose(stock.getQuote().getPreviousClose());
-            res.setVolume(stock.getQuote().getVolume() == null ? 0L : stock.getQuote().getVolume());
+            // Último preço é o close da última candle
+            if (!candles.isEmpty()) {
+                CandleDto last = candles.get(candles.size() - 1);
+                res.setPrice(last.getClose());
+            }
+            res.setCandles(candles);
             res.setLastUpdate(LocalDateTime.now());
 
-            List<CandleDto> candles = fetchHistorical(symbol, 6);
-            res.setCandles(candles);
-
+            // Calcula indicadores
             List<Double> closes = candles.stream()
-                    .map(c -> c.getClose() == null ? 0.0 : c.getClose().doubleValue())
+                    .map(c -> c.getClose().doubleValue())
                     .collect(Collectors.toList());
 
             Map<String, List<Double>> indicators = new HashMap<>();
@@ -58,46 +123,16 @@ public class ChartService {
             indicators.put("EMA_20", indicatorService.ema(closes, 20));
             indicators.put("RSI_14", indicatorService.rsi(closes, 14));
             indicators.put("MACD_12_26", indicatorService.macd(closes, 12, 26));
-
             res.setIndicators(indicators);
 
-            cache.put(symbol, res);
+            // Salva no cache
+            cache.put(symbol, new CacheEntry(res, now));
+
             return res;
 
-        } catch (IOException e) {
-            throw new RuntimeException("Erro YahooFinance: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar dados Alpha Vantage para " + symbol + ": " + e.getMessage(), e);
         }
-    }
-
-    public List<CandleDto> fetchHistorical(String symbol, int monthsBack) throws IOException {
-        Calendar from = Calendar.getInstance();
-        from.add(Calendar.MONTH, -monthsBack);
-
-        Stock stock = YahooFinance.get(symbol, from, Interval.DAILY);
-        List<HistoricalQuote> history = stock.getHistory(from, Calendar.getInstance(), Interval.DAILY);
-
-        List<CandleDto> candles = new ArrayList<>();
-        for (HistoricalQuote q : history) {
-            if (q.getDate() == null) continue;
-
-            CandleDto c = new CandleDto();
-            LocalDateTime ldt = q.getDate().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .atStartOfDay();
-
-            c.setTime(ldt);
-            c.setOpen(q.getOpen() != null ? q.getOpen() : BigDecimal.ZERO);
-            c.setHigh(q.getHigh() != null ? q.getHigh() : BigDecimal.ZERO);
-            c.setLow(q.getLow() != null ? q.getLow() : BigDecimal.ZERO);
-            c.setClose(q.getClose() != null ? q.getClose() : BigDecimal.ZERO);
-            c.setVolume(q.getVolume() != null ? q.getVolume() : 0L);
-
-            candles.add(c);
-        }
-
-        Collections.reverse(candles); // ordem cronológica
-        return candles;
     }
 
     @Scheduled(fixedRate = 30_000)
@@ -115,8 +150,18 @@ public class ChartService {
                     messagingTemplate.convertAndSend("/topic/chart/" + symbol, payload);
                 }
             } catch (Exception e) {
-                System.err.println("Erro ao publicar realtime " + symbol + ": " + e.getMessage());
+                System.err.println("Erro ao publicar realtime AV " + symbol + ": " + e.getMessage());
             }
+        }
+    }
+
+    private static class CacheEntry {
+        ChartDataResponse data;
+        long timestamp;
+
+        CacheEntry(ChartDataResponse data, long timestamp) {
+            this.data = data;
+            this.timestamp = timestamp;
         }
     }
 }

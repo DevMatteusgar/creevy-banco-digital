@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("[JWT] Verificando rota: " + path);
 
         // Libera endpoints públicos
-        if (path.startsWith("/auth") || path.startsWith("/actuator")) {
+        if (path.startsWith("/auth") || path.startsWith("/actuator") || path.startsWith("/ws")) {
             filterChain.doFilter(request, response);
             return;
         }

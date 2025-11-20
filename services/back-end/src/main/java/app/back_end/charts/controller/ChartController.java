@@ -6,36 +6,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/chart")
-@CrossOrigin("*")
 public class ChartController {
 
     @Autowired
     private ChartService chartService;
 
+    // Retorna informações gerais do gráfico (preço, candles, indicadores)
     @GetMapping("/info/{symbol}")
     public ResponseEntity<ChartDataResponse> getChartInfo(@PathVariable String symbol) {
-        ChartDataResponse response = chartService.getChartInfo(symbol);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @GetMapping("/history/{symbol}")
-    public ResponseEntity<?> getHistory(@PathVariable String symbol, @RequestParam(defaultValue = "6") int months) {
-        // months param supported, but ChartService.fetchHistorical expects int monthsBack; here we ignore for brevity
         try {
-            var list = chartService.fetchHistorical(symbol, months);
-            return ResponseEntity.status(HttpStatus.OK).body(list);
+            ChartDataResponse response = chartService.getChartInfo(symbol);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
         }
     }
 
+    // Retorna apenas os indicadores calculados para o ativo
     @GetMapping("/indicators/{symbol}")
     public ResponseEntity<?> getIndicators(@PathVariable String symbol) {
-        ChartDataResponse info = chartService.getChartInfo(symbol);
-        return ResponseEntity.status(HttpStatus.OK).body(info.getIndicators());
+        try {
+            ChartDataResponse info = chartService.getChartInfo(symbol);
+            return ResponseEntity.ok(info.getIndicators());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+    }
+
+    // Endpoint de histórico simplificado (os candles já vêm no getChartInfo)
+    @GetMapping("/history/{symbol}")
+    public ResponseEntity<?> getHistory(@PathVariable String symbol) {
+        try {
+            ChartDataResponse info = chartService.getChartInfo(symbol);
+            return ResponseEntity.ok(info.getCandles());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
     }
 }

@@ -11,55 +11,39 @@ import { ChartDataResponse } from '../../interfaces/ChartDataResponse';
 export class ApiChartService {
 
   private apiUrl = 'http://192.168.56.10:8080/chart';
-  private wsUrl  = 'http://192.168.56.10:8080/ws/prices';
+  private wsUrl  = 'http://192.168.56.10:8080/ws';
 
   private stompClient: Client | null = null;
 
   constructor(private http: HttpClient) {}
 
-  // -----------------------------
-  // Adiciona JWT no header
-  // -----------------------------
+  // ======================
+  // HTTP (com JWT se quiser)
+  // ======================
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    return new HttpHeaders(token ? { 'Authorization': `Bearer ${token}` } : {});
   }
 
-  // ======================
-  // HTTP AUTENTICADO
-  // ======================
   getInfo(symbol: string): Observable<ChartDataResponse> {
-    return this.http.get<ChartDataResponse>(
-      `${this.apiUrl}/info/${symbol}`,
-      { headers: this.getHeaders() }
-    );
+    return this.http.get<ChartDataResponse>(`${this.apiUrl}/info/${symbol}`, { headers: this.getHeaders() });
   }
 
   getHistory(symbol: string, months: number = 6): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/history/${symbol}?months=${months}`,
-      { headers: this.getHeaders() }
-    );
+    return this.http.get(`${this.apiUrl}/history/${symbol}?months=${months}`, { headers: this.getHeaders() });
   }
 
   getIndicators(symbol: string): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/indicators/${symbol}`,
-      { headers: this.getHeaders() }
-    );
+    return this.http.get(`${this.apiUrl}/indicators/${symbol}`, { headers: this.getHeaders() });
   }
 
   // ======================
-  // REAL-TIME WEBSOCKET (opcional)
+  // WEBSOCKET (público, sem JWT)
   // ======================
-  connectRealtime(onMessage: (msg: any) => void): void {
+  connectRealtime(symbols: string[], onMessage: (symbol: string, msg: any) => void): void {
     if (this.stompClient?.active) return;
 
     const socket = new SockJS(this.wsUrl);
-
     this.stompClient = new Client({
       webSocketFactory: () => socket as any,
       reconnectDelay: 5000,
@@ -67,10 +51,13 @@ export class ApiChartService {
     });
 
     this.stompClient.onConnect = () => {
-      console.log("WebSocket STOMP conectado");
-      this.stompClient!.subscribe('/topic/chart/AAPL', (message) => {
-        const body = JSON.parse(message.body);
-        onMessage(body);
+      console.log('[STOMP] Conectado');
+
+      symbols.forEach(symbol => {
+        this.stompClient!.subscribe(`/topic/chart/${symbol}`, (message) => {
+          const body = JSON.parse(message.body);
+          onMessage(symbol, body);
+        });
       });
     };
 
