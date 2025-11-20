@@ -1,0 +1,12 @@
+<h1>Gráfico de ações AAAAAAAAAAAAAAAAAAAAAAAAAAAA</h1>
+<div id="chart-wrapper" *ngIf="chartOptions">
+  <apx-chart
+    #chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [stroke]="chartOptions.stroke"
+    [tooltip]="chartOptions.tooltip"
+    [title]="chartOptions.title"
+  ></apx-chart>
+</div>
