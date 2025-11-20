@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -17,30 +17,46 @@ export class ApiChartService {
 
   constructor(private http: HttpClient) {}
 
+  // -----------------------------
+  // Adiciona JWT no header
+  // -----------------------------
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   // ======================
-  //  HTTP
+  // HTTP AUTENTICADO
   // ======================
   getInfo(symbol: string): Observable<ChartDataResponse> {
-    return this.http.get<ChartDataResponse>(`${this.apiUrl}/info/${symbol}`);
+    return this.http.get<ChartDataResponse>(
+      `${this.apiUrl}/info/${symbol}`,
+      { headers: this.getHeaders() }
+    );
   }
 
   getHistory(symbol: string, months: number = 6): Observable<any> {
-    return this.http.get(`${this.apiUrl}/history/${symbol}?months=${months}`);
+    return this.http.get(
+      `${this.apiUrl}/history/${symbol}?months=${months}`,
+      { headers: this.getHeaders() }
+    );
   }
 
   getIndicators(symbol: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/indicators/${symbol}`);
+    return this.http.get(
+      `${this.apiUrl}/indicators/${symbol}`,
+      { headers: this.getHeaders() }
+    );
   }
 
   // ======================
-  // REAL-TIME WEBSOCKET
+  // REAL-TIME WEBSOCKET (opcional)
   // ======================
   connectRealtime(onMessage: (msg: any) => void): void {
-
-    // Evita criar 2 conexões
-    if (this.stompClient !== null && this.stompClient.active) {
-      return;
-    }
+    if (this.stompClient?.active) return;
 
     const socket = new SockJS(this.wsUrl);
 
@@ -51,9 +67,8 @@ export class ApiChartService {
     });
 
     this.stompClient.onConnect = () => {
-      console.log("WebSocket conectado");
-
-      this.stompClient!.subscribe('/ws/prices', (message) => {
+      console.log("WebSocket STOMP conectado");
+      this.stompClient!.subscribe('/topic/chart/AAPL', (message) => {
         const body = JSON.parse(message.body);
         onMessage(body);
       });
