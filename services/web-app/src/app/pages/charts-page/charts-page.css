@@ -1,0 +1,15 @@
+/* Adicione ao arquivo CSS do componente desta página */
+
+.grid-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Ajuste responsivo para telas menores */
+@media (max-width: 1250px) {
+  .grid-container {
+    max-width: 95%;
+    padding: 10px;
+  }
+}
