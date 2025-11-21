@@ -38,12 +38,12 @@
     <table class="stocks-table">
       <thead>
       <tr>
-        <th>Código</th>
-        <th>Nome da Ação</th>
-        <th class="text-center">Quantidade</th>
-        <th class="text-right">Preço Unitário</th>
-        <th class="text-right">Valor Total</th>
-        <th class="actions-header">Ações</th>
+        <th class="th-code">Código</th>
+        <th class="th-name">Nome da Ação</th>
+        <th class="th-quantity">Quantidade</th>
+        <th class="th-price">Preço Unitário</th>
+        <th class="th-total">Valor Total</th>
+        <th class="th-actions">Ações</th>
       </tr>
       </thead>
 
@@ -52,15 +52,20 @@
 
         <!-- LINHA PRINCIPAL -->
         <tr [class.selected-row]="selectedStockIndex === i">
-          <td class="stock-code">{{ stock.stockIdentifier }}</td>
-          <td class="stock-name">{{ stock.stockName }}</td>
-          <td class="text-center">
+          <td class="td-code">
+            <span class="stock-code">{{ stock.stockIdentifier }}</span>
+          </td>
+          <td class="td-name">
+            <span class="stock-name">{{ stock.stockName }}</span>
+          </td>
+          <td class="td-quantity">
             <span class="quantity-badge">{{ stock.stockQuantity }}</span>
           </td>
-          <td class="text-right">{{ stock.stockPrice | currency:'BRL' }}</td>
-          <td class="text-right total-value">{{ stock.stockTotalValue | currency:'BRL' }}</td>
-
-          <td class="action-cell">
+          <td class="td-price">{{ stock.stockPrice | currency:'BRL' }}</td>
+          <td class="td-total">
+            <span class="total-value">{{ stock.stockTotalValue | currency:'BRL' }}</span>
+          </td>
+          <td class="td-actions">
             <button
               class="sell-btn"
               [class.active]="selectedStockIndex === i"
