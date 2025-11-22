@@ -2,8 +2,6 @@
 
 Aplicação Full-Stack com Spring-Framework + Angular + PostgreSQL + Docker que simula um banco digital com operações bancárias + integração com dados financeiros via Websocket.
 
----
-
 ![imagem-um](imagesToShow/Screenshot_4.png)
 
 # 1.0 Features do projeto
@@ -52,33 +50,23 @@ Aplicação Full-Stack com Spring-Framework + Angular + PostgreSQL + Docker que 
 
 ## 4.2 Iniciar máquina virtual vagrant
 
----
-
 `vagrant up` → subir a máquina virtual
 
 `vagrant ssh` → conectar-se á máquina virtual
 
 ## 4.3 Acessar o diretório do projeto
 
----
-
 `cd /vagrant/services` → dentro da vm após “vagrant ssh” acessar o diretório do projeto
 
 ## 4.4 Build e Up dos containers com docker-compose
-
----
 
 `docker compose up -- build` → Subir os containers
 
 ## 4.5 Acessar a aplicação no navegador
 
----
-
 [http://192.168.56.10:4200/web/login](http://192.168.56.10:4200/web/login?returnUrl=%2Fcharts) → página de login da aplicação
 
 # 5.0 Imagens do projeto
-
----
 
 ![imagem-um](imagesToShow/Screenshot_4.png)
 
