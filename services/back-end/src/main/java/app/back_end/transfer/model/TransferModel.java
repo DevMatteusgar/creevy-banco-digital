@@ -160,4 +160,7 @@ public class TransferModel {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
 }

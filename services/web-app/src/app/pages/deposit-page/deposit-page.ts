@@ -10,7 +10,6 @@ import {TransferForm} from '../../forms/transfer-form/transfer-form';
     NavbarLayout,
     DepositForm,
     LastTransfersTable,
-    TransferForm
   ],
   templateUrl: './deposit-page.html',
   styleUrl: './deposit-page.css',

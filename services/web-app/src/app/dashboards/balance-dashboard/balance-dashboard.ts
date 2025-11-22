@@ -1,7 +1,8 @@
+// balance-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import  {BalanceService} from '../../services/balance-service/balance-service';
-import {UserBalanceResponse} from '../../interfaces/UserBalanceResponse';
+import { BalanceService } from '../../services/balance-service/balance-service';
+import { UserBalanceResponse } from '../../interfaces/UserBalanceResponse';
 
 @Component({
   selector: 'app-balance-dashboard',
@@ -25,7 +26,6 @@ export class BalanceDashboard implements OnInit {
     this.carregarDados();
   }
 
-  // Carregar dados da API
   carregarDados(): void {
     this.carregando = true;
     this.erro = '';
@@ -36,7 +36,6 @@ export class BalanceDashboard implements OnInit {
         this.poupanca = response.savingsBalance;
         this.investimentos = response.investmentsBalance;
 
-        // Calcula porcentagem de investimentos em relação ao total
         if (this.saldoTotal > 0) {
           this.porcentagemInvestimentos = (this.investimentos / this.saldoTotal) * 100;
         }
@@ -52,7 +51,6 @@ export class BalanceDashboard implements OnInit {
     });
   }
 
-  // Atualizar data e hora
   private atualizarDataHora(): void {
     const agora = new Date();
     this.dataAtualizacao = agora.toLocaleString('pt-BR', {
@@ -64,20 +62,17 @@ export class BalanceDashboard implements OnInit {
     });
   }
 
-  // Formatar moeda
   formatarMoeda(valor: number): string {
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   }
 
-  // Atualizar os dados da dashboard
   atualizar(): void {
     console.log('Atualizando dashboard...');
     this.carregarDados();
   }
 
-  // Exportar em pdf ou xls
   exportar(): void {
-    // Implementar exportação futuramente
     console.log('Exportar dados');
+    // Implementar exportação futuramente
   }
 }

@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="card">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>Histórico de Operações</h1>
+      <p>Transferências e operações realizadas</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros">
+      <div class="filtro-destinatario">
+        <label>Pesquisar por nome do ativo</label>
+        <input
+          type="text"
+          [(ngModel)]="filtroNome"
+          (ngModelChange)="aplicarFiltros()"
+          placeholder="Ex: PETR4, VALE3"
+        />
+      </div>
+
+      <div class="filtros-horizontal">
+        <div class="filtro-grupo">
+          <label>Operação</label>
+          <select
+            [(ngModel)]="filtroOperacao"
+            (ngModelChange)="aplicarFiltros()"
+          >
+            <option value="">Todas</option>
+            <option value="compra">Compra</option>
+            <option value="venda">Venda</option>
+          </select>
+        </div>
+
+        <div class="filtro-grupo">
+          <label>Data início</label>
+          <input
+            type="date"
+            [(ngModel)]="filtroDataInicio"
+            (ngModelChange)="aplicarFiltros()"
+          />
+        </div>
+
+        <div class="filtro-grupo">
+          <label>Data fim</label>
+          <input
+            type="date"
+            [(ngModel)]="filtroDataFim"
+            (ngModelChange)="aplicarFiltros()"
+          />
+        </div>
+
+        <button class="btn-limpar" (click)="limparFiltros()">Limpar</button>
+      </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="content">
+
+      <table>
+        <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Identificador</th>
+          <th>Qtd</th>
+          <th class="text-right">Preço</th>
+          <th class="text-right">Total da Operação</th>
+          <th>Operação</th>
+          <th>Data</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let item of dadosPaginados">
+          <td>{{ item.stockName }}</td>
+          <td>{{ item.stockIdentifier }}</td>
+          <td>{{ item.stockQuantity }}</td>
+
+          <td class="valor">
+            {{ item.stockPrice | currency:'BRL' }}
+          </td>
+
+          <td class="valor">
+            {{ item.transactionTotalPrice | currency:'BRL' }}
+          </td>
+
+          <td class="operacao">
+            {{ item.operationType }}
+          </td>
+
+          <td>
+            {{ item.creationDate | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+        </tr>
+
+        <tr *ngIf="dadosPaginados.length === 0">
+          <td colspan="7" class="empty">Nenhum registro encontrado</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Paginação -->
+      <div class="footer">
+        <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+
+        <div class="total">
+          <strong>Total:</strong>
+          {{ totalRegistros }} registros
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import app.back_end.auth.exceptions.CpfAlreadyExistsException;
 import app.back_end.auth.exceptions.EmailAlreadyExistsException;
 import app.back_end.auth.exceptions.PasswordNotMatchException;
 import app.back_end.auth.exceptions.UserNotFoundException;
+import app.back_end.investments.exceptions.InsuficientInvestmentsFundsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,6 +56,14 @@ public class GlobalExceptionHandler {
     // email já existente
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409 Conflict
+    }
+
+    // fundos de investimento insuficientes
+    @ExceptionHandler(InsuficientInvestmentsFundsException.class)
+    public ResponseEntity<Map<String, String>> InsuficientInvestmentsFundsException(InsuficientInvestmentsFundsException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409 Conflict

@@ -1,0 +1,189 @@
+/* layout geral: container menor para evitar overflow */
+.transfer-container {
+  max-width: 480px;   /* reduzido de 600px -> 480px */
+  margin: 1.6rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* título centralizado */
+.title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  text-align: center;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+/* ROW de cards de saldo */
+.balances-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Cada card */
+.balance-card {
+  flex: 1 1 0;
+  background: #ffffff;
+  border: 1px solid #e6e7eb;
+  border-radius: 12px;
+  padding: 0.9rem;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0; /* evita overflow por conteúdo */
+}
+
+/* header do card: label + ícone */
+.balance-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.balance-icon {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+/* valor grande */
+.balance-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.15rem;
+}
+
+/* texto secundário */
+.balance-sub {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.15rem;
+}
+
+/* variações de cor sutis para destacar */
+.savings-card { border-left: 4px solid #60a5fa; }      /* azul suave */
+.investments-card { border-left: 4px solid #34d399; } /* verde suave */
+
+/* Form principal */
+.transfer-form {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+
+/* Linha do formulário */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Campo de entrada */
+.input-field {
+  padding: 0.65rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: white;
+  color: #111827;
+  width: 100%;
+  box-sizing: border-box; /* importante para não expandir além do container */
+}
+
+/* foco */
+.input-field:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 6px 18px rgba(99,102,241,0.08);
+}
+
+/* invalid */
+.input-field.invalid {
+  border-color: #dc2626;
+  box-shadow: 0 6px 18px rgba(220,38,38,0.06);
+}
+
+/* Erro */
+.error {
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+/* BOTÃO */
+.submit-button {
+  padding: 0.85rem;
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(2,6,23,0.12);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Notificação */
+.notification {
+  padding: 0.9rem;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification.success {
+  background: #ecfdf5;
+  color: #065f46;
+  border-left: 4px solid #10b981;
+}
+
+.notification.error {
+  background: #fff1f2;
+  color: #7f1d1d;
+  border-left: 4px solid #ef4444;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+}
+
+/* RESPONSIVO: empilha cards em telas pequenas */
+@media (max-width: 520px) {
+  .transfer-container { padding: 0.8rem; max-width: 100%; margin: 1rem; }
+  .balances-row { flex-direction: column; gap: 0.6rem; }
+  .balance-card { padding: 0.8rem; }
+}

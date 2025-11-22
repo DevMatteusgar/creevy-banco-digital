@@ -1,15 +1,25 @@
 package app.back_end.user.service;
 
+import app.back_end.auth.exceptions.UserNotFoundException;
 import app.back_end.auth.model.UserModel;
 import app.back_end.auth.repository.UserRepository;
+import app.back_end.investments.dto.response.StockMarketInfoDto;
+import app.back_end.investments.model.StocksModel;
+import app.back_end.investments.repository.StocksRepository;
+import app.back_end.investments.service.StocksService;
 import app.back_end.transfer.dto.response.UserBalanceDtoResponse;
 import app.back_end.transfer.model.TransferModel;
 import app.back_end.transfer.repository.TransferRepository;
+import app.back_end.user.dto.response.InvestmentsToSavingsTransferDtoResponse;
 import app.back_end.user.dto.response.UserBalanceHistoryDtoResponse;
+import app.back_end.user.dto.response.UserStockDetailDto;
+import app.back_end.user.dto.response.UserStocksBalanceDtoResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +32,12 @@ public class UserBalanceService {
 
     @Autowired
     private TransferRepository transferRepository;
+
+    @Autowired
+    private StocksRepository stocksRepository;
+
+    @Autowired
+    private StocksService stocksService;
 
     public UserBalanceDtoResponse getMyBalance(String email) {
         UserModel user = userRepository.findByEmail(email)
@@ -104,5 +120,156 @@ public class UserBalanceService {
                         t.getBalanceAfterOperation()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public TransferModel transferSavingsToInvestments(String email, Double amount) {
+
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("O valor deve ser maior que zero.");
+        }
+
+        UserModel user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (user.getSavingsBalance() < amount) {
+            throw new RuntimeException("Saldo insuficiente em SavingsBalance.");
+        }
+
+        // Atualiza saldos
+        user.setSavingsBalance(user.getSavingsBalance() - amount);
+        user.setInvestmentsBalance(user.getInvestmentsBalance() + amount);
+
+        // Criar transação interna COMPLETA
+        TransferModel transfer = new TransferModel();
+        transfer.setUser(user);
+
+        transfer.setSenderId(user.getId());
+        transfer.setReceiverId(user.getId());
+
+        transfer.setSenderCpf(user.getCpf());
+        transfer.setReceiverCpf(user.getCpf());
+
+        transfer.setSenderName(user.getName());
+        transfer.setReceiverName(user.getName());
+
+        transfer.setOperationType("SavingsToInvestments");
+        transfer.setAmount(amount);
+        transfer.setBalanceAfterOperation(user.getInvestmentsBalance());
+        transfer.setDescription("Transferência interna: Savings → Investments");
+        transfer.setDate(LocalDateTime.now());
+
+        transferRepository.save(transfer);
+
+        return transfer;
+    }
+
+    @Transactional
+    public InvestmentsToSavingsTransferDtoResponse transferInvestmentsToSavings(String email, Double amount) {
+
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("O valor deve ser maior que zero.");
+        }
+
+        UserModel user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (user.getInvestmentsBalance() < amount) {
+            throw new RuntimeException("Saldo insuficiente em InvestmentsBalance.");
+        }
+
+        // Atualiza saldos
+        user.setInvestmentsBalance(user.getInvestmentsBalance() - amount);
+        user.setSavingsBalance(user.getSavingsBalance() + amount);
+
+        // Criar registro da transação
+        TransferModel transfer = new TransferModel();
+        transfer.setUser(user);
+
+        transfer.setSenderId(user.getId());
+        transfer.setReceiverId(user.getId());
+
+        transfer.setSenderCpf(user.getCpf());
+        transfer.setReceiverCpf(user.getCpf());
+
+        transfer.setSenderName(user.getName());
+        transfer.setReceiverName(user.getName());
+
+        transfer.setOperationType("InvestmentsToSavings");
+        transfer.setAmount(amount);
+        transfer.setBalanceAfterOperation(user.getSavingsBalance());
+        transfer.setDescription("Transferência interna: Investments → Savings");
+        transfer.setDate(LocalDateTime.now());
+
+        transferRepository.save(transfer);
+
+        // Retorna DTOResponse
+        return new InvestmentsToSavingsTransferDtoResponse(
+                transfer.getOperationType(),
+                transfer.getAmount(),
+                transfer.getBalanceAfterOperation(),
+                transfer.getDescription(),
+                transfer.getDate()
+        );
+    }
+
+    public UserStocksBalanceDtoResponse getUserStocksBalance(String email){
+
+        // Buscar usuário
+        UserModel user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+
+        // Buscar ações do usuário
+        List<StocksModel> stocks = stocksRepository.findAllByUserId(user.getId());
+
+        double totalInvested = 0.0;
+        double totalCurrent = 0.0;
+
+        List<UserStockDetailDto> stockDetails = new ArrayList<>();
+
+        for (StocksModel s : stocks) {
+
+            String ticker = s.getStockIdentifier();
+            int qtd = s.getStockQuantity();
+            double pm = s.getStockPrice(); // preço médio
+            double investedValue = pm * qtd;
+
+            // Cotação atual da brapi
+            StockMarketInfoDto marketInfo = stocksService.getStockMarketInfo(ticker);
+            double currentPrice = marketInfo.getPrice();
+            double currentValue = currentPrice * qtd;
+
+            // Lucro da ação
+            double profitValue = currentValue - investedValue;
+            double profitPercent = investedValue == 0 ? 0 : (profitValue / investedValue) * 100;
+
+            totalInvested += investedValue;
+            totalCurrent += currentValue;
+
+            // Adiciona ao detalhe
+            stockDetails.add(new UserStockDetailDto(
+                    ticker,
+                    s.getStockName(),
+                    qtd,
+                    pm,
+                    investedValue,
+                    currentPrice,
+                    currentValue,
+                    profitValue,
+                    profitPercent
+            ));
+        }
+
+        // Rentabilidade total
+        double totalProfitValue = totalCurrent - totalInvested;
+        double totalProfitPercent = totalInvested == 0 ? 0 : (totalProfitValue / totalInvested) * 100;
+
+        return new UserStocksBalanceDtoResponse(
+                totalInvested,
+                totalCurrent,
+                totalProfitValue,
+                totalProfitPercent,
+                stockDetails
+        );
     }
 }
