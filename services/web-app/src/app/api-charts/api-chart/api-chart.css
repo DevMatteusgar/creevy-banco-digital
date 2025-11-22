@@ -1,0 +1,11 @@
+#chart-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 15px;
+  touch-action: pan-x pan-y; /* evita warning de passive event */
+}
+
+apx-chart {
+  display: block;
+}

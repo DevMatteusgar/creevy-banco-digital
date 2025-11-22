@@ -153,7 +153,6 @@
 
 .stocks-table th {
   padding: 16px 20px;
-  text-align: left;
   font-weight: 700;
   font-size: 12px;
   color: #6b7280;
@@ -162,19 +161,44 @@
   border-bottom: 2px solid #e5e7eb;
 }
 
-.text-center {
-  text-align: center;
+.stocks-table td {
+  padding: 20px;
+  font-size: 14px;
+  color: #374151;
 }
 
-.text-right {
+/* ========== ALINHAMENTOS CORRETOS ========== */
+.th-code, .td-code {
+  text-align: left;
+  width: 10%;
+}
+
+.th-name, .td-name {
+  text-align: left;
+  width: 30%;
+}
+
+.th-quantity, .td-quantity {
+  text-align: center;
+  width: 15%;
+}
+
+.th-price, .td-price {
   text-align: right;
+  width: 15%;
 }
 
-.actions-header {
-  width: 140px;
+.th-total, .td-total {
+  text-align: right;
+  width: 15%;
+}
+
+.th-actions, .td-actions {
   text-align: center;
+  width: 15%;
 }
 
+/* ========== Table Rows ========== */
 .stocks-table tbody tr {
   border-bottom: 1px solid #f3f4f6;
   transition: background-color 0.2s;
@@ -187,12 +211,6 @@
 .stocks-table tbody tr.selected-row {
   background-color: #f9fafb;
   border-bottom: none;
-}
-
-.stocks-table td {
-  padding: 20px;
-  font-size: 14px;
-  color: #374151;
 }
 
 .stock-code {
@@ -220,10 +238,6 @@
   font-weight: 700;
   color: #10b981;
   font-size: 15px;
-}
-
-.action-cell {
-  text-align: center;
 }
 
 /* ========== Sell Button ========== */
