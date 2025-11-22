@@ -4,7 +4,7 @@ Aplicação Full-Stack com Spring-Framework + Angular + PostgreSQL + Docker que 
 
 ---
 
-![imagem-um](imagesToShow/**Screenshot_4.png**)
+![imagem-um](imagesToShow/Screenshot_4.png)
 
 # 1.0 Features do projeto
 
@@ -80,8 +80,8 @@ Aplicação Full-Stack com Spring-Framework + Angular + PostgreSQL + Docker que 
 
 ---
 
-![imagem-um](imagesToShow/**Screenshot_4.png**)
+![imagem-um](imagesToShow/Screenshot_4.png)
 
-![imagem-um](imagesToShow/**Screenshot_3.png**)
+![imagem-um](imagesToShow/Screenshot_3.png)
 
-![imagem-um](imagesToShow/**Screenshot_8.png**)
+![imagem-um](imagesToShow/Screenshot_8.png)
