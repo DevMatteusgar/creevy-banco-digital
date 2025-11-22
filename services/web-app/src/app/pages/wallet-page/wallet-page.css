@@ -1,0 +1,36 @@
+/* wallet-page.css (página que contém os dois componentes) */
+
+.wallet-page {
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* Navbar ocupa toda a largura */
+.wallet-page app-navbar-layout {
+  display: block;
+  width: 100%;
+}
+
+/* Conteúdo centralizado com max-width */
+.wallet-page-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Espaçamento entre dashboard e tabela */
+.wallet-page-content app-wallet-balance-dashboard {
+  display: block;
+  margin-bottom: 32px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .wallet-page-content {
+    padding: 20px 16px;
+  }
+
+  .wallet-page-content app-wallet-balance-dashboard {
+    margin-bottom: 24px;
+  }
+}

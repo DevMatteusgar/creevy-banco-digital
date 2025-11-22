@@ -1,0 +1,461 @@
+/* wallet-stocks-table.css */
+
+.my-stocks-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ========== Header ========== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #1a1a2e;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.refresh-btn {
+  padding: 12px 24px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.refresh-btn:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.refresh-btn .icon {
+  font-size: 16px;
+}
+
+/* ========== Summary Card ========== */
+.summary-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.summary-header .icon {
+  font-size: 24px;
+}
+
+.summary-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.total-portfolio {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* ========== Loading ========== */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========== Error ========== */
+.error-message {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #dc2626;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.error-icon {
+  font-size: 20px;
+}
+
+/* ========== Table ========== */
+.table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stocks-table thead {
+  background-color: #f9fafb;
+}
+
+.stocks-table th {
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.stocks-table td {
+  padding: 20px;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* ========== ALINHAMENTOS CORRETOS ========== */
+.th-code, .td-code {
+  text-align: left;
+  width: 10%;
+}
+
+.th-name, .td-name {
+  text-align: left;
+  width: 30%;
+}
+
+.th-quantity, .td-quantity {
+  text-align: center;
+  width: 15%;
+}
+
+.th-price, .td-price {
+  text-align: right;
+  width: 15%;
+}
+
+.th-total, .td-total {
+  text-align: right;
+  width: 15%;
+}
+
+.th-actions, .td-actions {
+  text-align: center;
+  width: 15%;
+}
+
+/* ========== Table Rows ========== */
+.stocks-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s;
+}
+
+.stocks-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.stocks-table tbody tr.selected-row {
+  background-color: #f9fafb;
+  border-bottom: none;
+}
+
+.stock-code {
+  font-weight: 700;
+  color: #3b82f6;
+  font-size: 15px;
+}
+
+.stock-name {
+  color: #374151;
+  font-weight: 500;
+}
+
+.quantity-badge {
+  background-color: #eff6ff;
+  color: #3b82f6;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.total-value {
+  font-weight: 700;
+  color: #10b981;
+  font-size: 15px;
+}
+
+/* ========== Sell Button ========== */
+.sell-btn {
+  padding: 8px 16px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.sell-btn:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.sell-btn.active {
+  background-color: #dc2626;
+}
+
+/* ========== Sell Form ========== */
+.sell-row td {
+  background: #f9fafb;
+  padding: 0;
+  border-top: 2px solid #e5e7eb;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sell-form-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sell-form-container h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* Mensagem de Erro da Venda */
+.sell-error-message {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error-icon-inline {
+  font-size: 20px;
+}
+
+.sell-form-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.sell-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.sell-input:focus {
+  border-color: #3b82f6;
+}
+
+.sell-input.input-error {
+  border-color: #dc2626;
+}
+
+.input-helper {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ========== Estimated Value ========== */
+.estimated-value-card {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.estimated-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.estimated-label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.estimated-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.estimated-calculation {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ========== Confirm Button ========== */
+.confirm-sell-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.confirm-sell-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.confirm-sell-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========== Empty State ========== */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 12px 0;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header-content h1 {
+    font-size: 24px;
+  }
+
+  .total-portfolio {
+    font-size: 28px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .stocks-table {
+    min-width: 800px;
+  }
+}

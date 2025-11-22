@@ -157,6 +157,9 @@ export class NavbarLayout implements OnInit {
       case 'gráficos':
         console.log('Abrindo gráficos...');
         break;
+      case 'transferências':
+        console.log("Abrindo transferências...");
+        break;
     }
 
     this.closeInvest();
